@@ -19,6 +19,9 @@ configuration:
     mediatedDevices:
     - mdevNameSelector: "GRID T4-1Q"
       resourceName: "nvidia.com/GRID_T4-1Q"
+    usbDevices:
+    - usbVendorSelector: "046d:c06a"
+      resourceName: "usb/logitech"
 ```
 
 ### Device plugins for host devices assignment in KubeVirt

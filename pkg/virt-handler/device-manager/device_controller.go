@@ -172,6 +172,8 @@ func (c *DeviceController) NodeHasDevice(devicePath string) bool {
 func (c *DeviceController) updatePermittedHostDevicePlugins() []Device {
 	var permittedDevices []Device
 
+	log.Log.V(4).Infof("=============== Entering updatePermittedHostDevicePlugins")
+
 	var featureGatedDevices = []struct {
 		Name      string
 		Path      string
@@ -192,6 +194,31 @@ func (c *DeviceController) updatePermittedHostDevicePlugins() []Device {
 	hostDevs := c.virtConfig.GetPermittedHostDevices()
 	if hostDevs == nil {
 		return permittedDevices
+	}
+
+	if len(hostDevs.UsbDevices) != 0 {
+		log.Log.V(1).Infof("Discovered %d devices", len(hostDevs.UsbDevices))
+
+		supportedUSBDeviceMap := make(map[string]string)
+		for _, usbDev := range hostDevs.UsbDevices {
+			log.Log.V(4).Infof("Permitted USB device in the cluster, ID: %s, resourceName: %s, externalProvider: %t",
+				strings.ToLower(usbDev.USBVendorSelector),
+				usbDev.ResourceName,
+				usbDev.ExternalResourceProvider)
+			// do not add a device plugin for this resource if it's being provided via an external device plugin
+			if !usbDev.ExternalResourceProvider {
+				supportedUSBDeviceMap[strings.ToLower(usbDev.USBVendorSelector)] = usbDev.ResourceName
+			}
+		}
+		for usbResourceName, usbDevices := range discoverPermittedHostUSBDevices(supportedUSBDeviceMap) {
+			log.Log.V(4).Infof("Discovered USBs %d devices on the node for the resource: %s", len(usbDevices), usbResourceName)
+			// add a device plugin only for new devices
+			permittedDevices = append(permittedDevices, NewUSBDevicePlugin(usbDevices, usbResourceName))
+		}
+
+		// permittedDevices = append(permittedDevices, NewPCIDevicePlugin(pciDevices, pciResourceName))
+	} else {
+		log.Log.V(4).Infof("=============== no usb devices  ===========")
 	}
 
 	if len(hostDevs.PciHostDevices) != 0 {
