@@ -119,6 +119,8 @@ func (dpi *MediatedDevicePlugin) Start(stop <-chan struct{}) (err error) {
 	dpi.done = make(chan struct{})
 	dpi.deregistered = make(chan struct{})
 
+	logger.V(2).Infof("health Event: =========================================================== YTAN29")
+
 	err = dpi.cleanup()
 	if err != nil {
 		return err

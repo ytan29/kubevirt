@@ -452,6 +452,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevirt.io/api/core/v1.TokenBucketRateLimiter":                                             schema_kubevirtio_api_core_v1_TokenBucketRateLimiter(ref),
 		"kubevirt.io/api/core/v1.TopologyHints":                                                      schema_kubevirtio_api_core_v1_TopologyHints(ref),
 		"kubevirt.io/api/core/v1.UnpauseOptions":                                                     schema_kubevirtio_api_core_v1_UnpauseOptions(ref),
+		"kubevirt.io/api/core/v1.UsbHostDevice":                                                      schema_kubevirtio_api_core_v1_UsbHostDevice(ref),
 		"kubevirt.io/api/core/v1.UserPasswordAccessCredential":                                       schema_kubevirtio_api_core_v1_UserPasswordAccessCredential(ref),
 		"kubevirt.io/api/core/v1.UserPasswordAccessCredentialPropagationMethod":                      schema_kubevirtio_api_core_v1_UserPasswordAccessCredentialPropagationMethod(ref),
 		"kubevirt.io/api/core/v1.UserPasswordAccessCredentialSource":                                 schema_kubevirtio_api_core_v1_UserPasswordAccessCredentialSource(ref),
@@ -18941,11 +18942,28 @@ func schema_kubevirtio_api_core_v1_PermittedHostDevices(ref common.ReferenceCall
 							},
 						},
 					},
+					"usbDevices": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubevirt.io/api/core/v1.UsbHostDevice"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubevirt.io/api/core/v1.MediatedHostDevice", "kubevirt.io/api/core/v1.PciHostDevice"},
+			"kubevirt.io/api/core/v1.MediatedHostDevice", "kubevirt.io/api/core/v1.PciHostDevice", "kubevirt.io/api/core/v1.UsbHostDevice"},
 	}
 }
 
@@ -20139,6 +20157,38 @@ func schema_kubevirtio_api_core_v1_UnpauseOptions(ref common.ReferenceCallback) 
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_kubevirtio_api_core_v1_UsbHostDevice(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UsbHostDevice represents a host usb device allowed for passthrough",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"usbVendorSelector": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"resourceName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"externalResourceProvider": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"usbVendorSelector", "resourceName"},
 			},
 		},
 	}

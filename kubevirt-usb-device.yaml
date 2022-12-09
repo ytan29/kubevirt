@@ -1,0 +1,26 @@
+apiVersion: kubevirt.io/v1
+kind: KubeVirt
+metadata:
+  name: kubevirt
+  namespace: kubevirt
+spec:
+  configuration:
+    developerConfiguration:
+      featureGates:
+        - GPU
+        - HostDevices
+      logVerbosity:
+        virtLauncher: 4
+        virtHandler: 4
+        virtController: 4
+        virtAPI: 5
+        virtOperator: 6
+    permittedHostDevices:
+      usbDevices:
+      - usbVendorSelector: "046d:c06a"
+        resourceName: "logitech/hid-mouse"
+        externalResourceProvider: false
+      pciHostDevices:
+      - pciVendorSelector: "8086:4680"
+        resourceName: "intel.com/sriov-gpudevice"
+        externalResourceProvider: false

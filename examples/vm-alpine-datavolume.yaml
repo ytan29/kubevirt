@@ -20,7 +20,7 @@ spec:
         storageClassName: local
       source:
         http:
-          url: docker://registry:5000/kubevirt/alpine-container-disk-demo:devel
+          url: docker://localhost:5000/kubevirt/alpine-container-disk-demo:v0.57.1-dev
   running: false
   template:
     metadata:

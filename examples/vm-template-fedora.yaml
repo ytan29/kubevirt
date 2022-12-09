@@ -60,7 +60,7 @@ objects:
               chpasswd: { expire: False }
           name: cloudinitdisk
         - containerDisk:
-            image: registry:5000/kubevirt/fedora-with-test-tooling-container-disk:devel
+            image: localhost:5000/kubevirt/fedora-with-test-tooling-container-disk:v0.57.1-dev
           name: containerdisk
   status: {}
 parameters:

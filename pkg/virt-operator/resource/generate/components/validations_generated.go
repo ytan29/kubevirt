@@ -967,6 +967,23 @@ var CRDsValidation map[string]string = map[string]string{
                     type: object
                   type: array
                   x-kubernetes-list-type: atomic
+                usbDevices:
+                  items:
+                    description: UsbHostDevice represents a host usb device allowed
+                      for passthrough
+                    properties:
+                      externalResourceProvider:
+                        type: boolean
+                      resourceName:
+                        type: string
+                      usbVendorSelector:
+                        type: string
+                    required:
+                    - resourceName
+                    - usbVendorSelector
+                    type: object
+                  type: array
+                  x-kubernetes-list-type: atomic
               type: object
             selinuxLauncherType:
               type: string
