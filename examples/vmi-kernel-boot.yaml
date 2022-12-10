@@ -11,7 +11,7 @@ spec:
     firmware:
       kernelBoot:
         container:
-          image: registry:5000/kubevirt/alpine-ext-kernel-boot-demo:devel
+          image: localhost:5000/kubevirt/alpine-ext-kernel-boot-demo:v0.57.1-dev
           initrdPath: /boot/initramfs-virt
           kernelPath: /boot/vmlinuz-virt
         kernelArgs: console=ttyS0

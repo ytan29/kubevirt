@@ -17481,28 +17481,6 @@
      }
     }
    },
-   "v1.UsbHostDevice": {
-    "description": "UsbHostDevice represents a host PCI device allowed for passthrough",
-    "type": "object",
-    "required": [
-     "pciVendorSelector",
-     "resourceName"
-    ],
-    "properties": {
-     "externalResourceProvider": {
-      "description": "If true, KubeVirt will leave the allocation and monitoring to an external device plugin",
-      "type": "boolean"
-     },
-     "usbVendorSelector": {
-      "description": "The vendor_id:product_id tuple of the USB device",
-      "type": "string"
-     },
-     "resourceName": {
-      "description": "The name of the resource that is representing the device. Exposed by a device plugin and requested by VMs. Typically of the form vendor.com/product_nameThe name of the resource that is representing the device. Exposed by a device plugin and requested by VMs. Typically of the form vendor.com/product_name",
-      "type": "string"
-     }
-    }
-   },
    "v1.PermittedHostDevices": {
     "description": "PermittedHostDevices holds information about devices allowed for passthrough",
     "type": "object",
@@ -17527,7 +17505,7 @@
        "$ref": "#/definitions/v1.UsbHostDevice"
       },
       "x-kubernetes-list-type": "atomic"
-     },
+     }
     }
    },
    "v1.PersistentVolumeClaimInfo": {
@@ -18118,6 +18096,25 @@
      },
      "kind": {
       "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+     }
+    }
+   },
+   "v1.UsbHostDevice": {
+    "description": "UsbHostDevice represents a host usb device allowed for passthrough",
+    "type": "object",
+    "required": [
+     "usbVendorSelector",
+     "resourceName"
+    ],
+    "properties": {
+     "externalResourceProvider": {
+      "type": "boolean"
+     },
+     "resourceName": {
+      "type": "string"
+     },
+     "usbVendorSelector": {
       "type": "string"
      }
     }

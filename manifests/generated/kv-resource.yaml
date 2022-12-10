@@ -495,28 +495,18 @@ spec:
                         x-kubernetes-list-type: atomic
                       usbDevices:
                         items:
-                          description: usbDevices represents a host usb device
+                          description: UsbHostDevice represents a host usb device
                             allowed for passthrough
                           properties:
                             externalResourceProvider:
-                              description: If true, KubeVirt will leave the allocation
-                                and monitoring to an external device plugin
                               type: boolean
-                            usbVendorSelector:
-                              description: The vendor_id:product_id tuple of the USB
-                                device
-                              type: string
                             resourceName:
-                              description: The name of the resource that is representing
-                                the device. Exposed by a device plugin and requested
-                                by VMs. Typically of the form vendor.com/product_nameThe
-                                name of the resource that is representing the device.
-                                Exposed by a device plugin and requested by VMs. Typically
-                                of the form vendor.com/product_name
+                              type: string
+                            usbVendorSelector:
                               type: string
                           required:
-                          - usbVendorSelector
                           - resourceName
+                          - usbVendorSelector
                           type: object
                         type: array
                         x-kubernetes-list-type: atomic
@@ -3241,28 +3231,18 @@ spec:
                         x-kubernetes-list-type: atomic
                       usbDevices:
                         items:
-                          description: usbDevices represents a host usb device
+                          description: UsbHostDevice represents a host usb device
                             allowed for passthrough
                           properties:
                             externalResourceProvider:
-                              description: If true, KubeVirt will leave the allocation
-                                and monitoring to an external device plugin
                               type: boolean
-                            usbVendorSelector:
-                              description: The vendor_id:product_id tuple of the USB
-                                device
-                              type: string
                             resourceName:
-                              description: The name of the resource that is representing
-                                the device. Exposed by a device plugin and requested
-                                by VMs. Typically of the form vendor.com/product_nameThe
-                                name of the resource that is representing the device.
-                                Exposed by a device plugin and requested by VMs. Typically
-                                of the form vendor.com/product_name
+                              type: string
+                            usbVendorSelector:
                               type: string
                           required:
-                          - usbVendorSelector
                           - resourceName
+                          - usbVendorSelector
                           type: object
                         type: array
                         x-kubernetes-list-type: atomic

@@ -748,6 +748,7 @@ func (PermittedHostDevices) SwaggerDoc() map[string]string {
 		"":                "PermittedHostDevices holds information about devices allowed for passthrough",
 		"pciHostDevices":  "+listType=atomic",
 		"mediatedDevices": "+listType=atomic",
+		"usbDevices":      "+listType=atomic",
 	}
 }
 
@@ -757,6 +758,12 @@ func (PciHostDevice) SwaggerDoc() map[string]string {
 		"pciVendorSelector":        "The vendor_id:product_id tuple of the PCI device",
 		"resourceName":             "The name of the resource that is representing the device. Exposed by\na device plugin and requested by VMs. Typically of the form\nvendor.com/product_nameThe name of the resource that is representing\nthe device. Exposed by a device plugin and requested by VMs.\nTypically of the form vendor.com/product_name",
 		"externalResourceProvider": "If true, KubeVirt will leave the allocation and monitoring to an\nexternal device plugin",
+	}
+}
+
+func (UsbHostDevice) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"": "UsbHostDevice represents a host usb device allowed for passthrough\n+k8s:openapi-gen=true",
 	}
 }
 

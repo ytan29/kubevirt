@@ -20,7 +20,7 @@ spec:
       terminationGracePeriodSeconds: 0
       volumes:
       - containerDisk:
-          image: registry:5000/kubevirt/cirros-container-disk-demo:devel
+          image: localhost:5000/kubevirt/cirros-container-disk-demo:v0.57.1-dev
         name: containerdisk
       - cloudInitNoCloud:
           userData: |
