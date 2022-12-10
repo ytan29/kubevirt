@@ -36,6 +36,8 @@ type AddressPool struct {
 // NewAddressPool creates an address pool based on the provided list of resources and
 // the environment variables that correspond to it.
 func NewAddressPool(resourcePrefix string, resources []string) *AddressPool {
+	log.Log.Warningf("===== NewAddressPool for %s", resourcePrefix)
+	log.Log.Warningf("===== resources %v", resources)
 	pool := &AddressPool{
 		addressesByResource: make(map[string][]string),
 	}
@@ -45,6 +47,7 @@ func NewAddressPool(resourcePrefix string, resources []string) *AddressPool {
 
 func (p *AddressPool) load(resourcePrefix string, resources []string) {
 	for _, resource := range resources {
+		log.Log.Warningf("===== setting for resource %s", resource)
 		addressEnvVarName := util.ResourceNameToEnvVar(resourcePrefix, resource)
 		addressString, isSet := os.LookupEnv(addressEnvVarName)
 		if !isSet {
