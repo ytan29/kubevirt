@@ -2386,7 +2386,8 @@ type PciHostDevice struct {
 // UsbHostDevice represents a host usb device allowed for passthrough
 // +k8s:openapi-gen=true
 type UsbHostDevice struct {
-	USBVendorSelector        string `json:"usbVendorSelector"`
+	// USBVendorSelector        string `json:"usbVendorSelector"`
+	USBBusDevSelector        string `json:"usbBusDevSelector"`
 	ResourceName             string `json:"resourceName"`
 	ExternalResourceProvider bool   `json:"externalResourceProvider,omitempty"`
 }

@@ -976,11 +976,12 @@ var CRDsValidation map[string]string = map[string]string{
                         type: boolean
                       resourceName:
                         type: string
-                      usbVendorSelector:
+                      usbBusDevSelector:
+                        description: USBVendorSelector        string 'json:"usbVendorSelector"'
                         type: string
                     required:
                     - resourceName
-                    - usbVendorSelector
+                    - usbBusDevSelector
                     type: object
                   type: array
                   x-kubernetes-list-type: atomic

@@ -18104,7 +18104,7 @@
     "description": "UsbHostDevice represents a host usb device allowed for passthrough",
     "type": "object",
     "required": [
-     "usbVendorSelector",
+     "usbBusDevSelector",
      "resourceName"
     ],
     "properties": {
@@ -18114,7 +18114,8 @@
      "resourceName": {
       "type": "string"
      },
-     "usbVendorSelector": {
+     "usbBusDevSelector": {
+      "description": "USBVendorSelector        string `json:\"usbVendorSelector\"`",
       "type": "string"
      }
     }
