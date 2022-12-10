@@ -18,8 +18,11 @@ spec:
     permittedHostDevices:
       usbDevices:
       # - usbVendorSelector: "046d:c06a"
-      - usbBusDevSelector: "1-9"
-        resourceName: "logitech/hid-mouse"
+      - usbBusDevSelector: "001-002"
+        resourceName: "generic/hid-mouse"
+        externalResourceProvider: false
+      - usbBusDevSelector: "001-003"
+        resourceName: "generic/hid-mouse"
         externalResourceProvider: false
       pciHostDevices:
       - pciVendorSelector: "8086:4680"

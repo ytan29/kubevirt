@@ -197,8 +197,6 @@ func (c *DeviceController) updatePermittedHostDevicePlugins() []Device {
 	}
 
 	if len(hostDevs.UsbDevices) != 0 {
-		log.Log.V(1).Infof("Discovered %d devices", len(hostDevs.UsbDevices))
-
 		supportedUSBDeviceMap := make(map[string]string)
 		for _, usbDev := range hostDevs.UsbDevices {
 			log.Log.V(4).Infof("Permitted USB device in the cluster, ID: %s, resourceName: %s, externalProvider: %t",
@@ -215,10 +213,6 @@ func (c *DeviceController) updatePermittedHostDevicePlugins() []Device {
 			// add a device plugin only for new devices
 			permittedDevices = append(permittedDevices, NewUSBDevicePlugin(usbDevices, usbResourceName))
 		}
-
-		// permittedDevices = append(permittedDevices, NewPCIDevicePlugin(pciDevices, pciResourceName))
-	} else {
-		log.Log.V(4).Infof("=============== no usb devices  ===========")
 	}
 
 	if len(hostDevs.PciHostDevices) != 0 {

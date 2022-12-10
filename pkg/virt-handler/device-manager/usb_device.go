@@ -20,13 +20,17 @@
 package device_manager
 
 import (
+	"errors"
 	"fmt"
 	"net"
+	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/fsnotify/fsnotify"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"kubevirt.io/client-go/log"
@@ -43,8 +47,11 @@ const (
 )
 
 type USBDevice struct {
-	VendorID  string
-	ProductID string
+	VendorID    string
+	ProductID   string
+	BusNum      string
+	DevNum      string
+	FullDevPath string
 }
 
 type USBDevicePlugin struct {
@@ -67,7 +74,7 @@ func NewUSBDevicePlugin(usbDevices []*USBDevice, resourceName string) *USBDevice
 
 	initHandler()
 
-	devs := constructUSBdevices(usbDevices)
+	devs := constructDPIdevicesFromUsb(usbDevices)
 	dpi := &USBDevicePlugin{
 		devs:         devs,
 		socketPath:   serverSock,
@@ -81,10 +88,10 @@ func NewUSBDevicePlugin(usbDevices []*USBDevice, resourceName string) *USBDevice
 	return dpi
 }
 
-func constructUSBdevices(usbDevices []*USBDevice) (devs []*pluginapi.Device) {
+func constructDPIdevicesFromUsb(usbDevices []*USBDevice) (devs []*pluginapi.Device) {
 	for _, usbDevice := range usbDevices {
 		dpiDev := &pluginapi.Device{
-			ID:     usbDevice.VendorID + ":" + usbDevice.ProductID,
+			ID:     usbDevice.BusNum + "/" + usbDevice.DevNum,
 			Health: pluginapi.Healthy,
 		}
 		devs = append(devs, dpiDev)
@@ -94,6 +101,7 @@ func constructUSBdevices(usbDevices []*USBDevice) (devs []*pluginapi.Device) {
 
 // Start starts the device plugin
 func (dpi *USBDevicePlugin) Start(stop <-chan struct{}) (err error) {
+	log.Log.Info("===================start usb===================")
 	logger := log.DefaultLogger()
 	dpi.stop = stop
 	dpi.done = make(chan struct{})
@@ -145,6 +153,7 @@ func (dpi *USBDevicePlugin) ListAndWatch(_ *pluginapi.Empty, s pluginapi.DeviceP
 	// FIXME: sending an empty list up front should not be needed. This is a workaround for:
 	// https://github.com/kubevirt/kubevirt/issues/1196
 	// This can safely be removed once supported upstream Kubernetes is 1.10.3 or higher.
+	log.Log.Info("===================list and watch usb===================")
 	emptyList := []*pluginapi.Device{}
 	s.Send(&pluginapi.ListAndWatchResponse{Devices: emptyList})
 
@@ -203,7 +212,82 @@ func (dpi *USBDevicePlugin) Allocate(_ context.Context, r *pluginapi.AllocateReq
 
 func (dpi *USBDevicePlugin) healthCheck() error {
 	log.Log.Info("===================healthcheck for usb===================")
-	return nil
+
+	logger := log.DefaultLogger()
+	monitoredDevices := make(map[string]string)
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		return fmt.Errorf("failed to creating a fsnotify watcher: %v", err)
+	}
+	defer watcher.Close()
+
+	// This way we don't have to mount /dev from the node
+	devicePath := filepath.Join(dpi.deviceRoot, dpi.devicePath)
+
+	// Start watching the files before we check for their existence to avoid races
+	dirName := filepath.Dir(devicePath)
+	err = watcher.Add(dirName)
+	if err != nil {
+		return fmt.Errorf("failed to add the device root path to the watcher: %v", err)
+	}
+
+	_, err = os.Stat(devicePath)
+	if err != nil {
+		if !errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("could not stat the device: %v", err)
+		}
+	}
+
+	// probe all devices
+	for _, dev := range dpi.devs {
+		usbDevice := filepath.Join(devicePath, dev.ID)
+		err = watcher.Add(usbDevice)
+		if err != nil {
+			return fmt.Errorf("failed to add the device %s to the watcher: %v", usbDevice, err)
+		}
+		monitoredDevices[usbDevice] = dev.ID
+	}
+
+	dirName = filepath.Dir(dpi.socketPath)
+	err = watcher.Add(dirName)
+
+	if err != nil {
+		return fmt.Errorf("failed to add the device-plugin kubelet path to the watcher: %v", err)
+	}
+	_, err = os.Stat(dpi.socketPath)
+	if err != nil {
+		return fmt.Errorf("failed to stat the device-plugin socket: %v", err)
+	}
+
+	for {
+		select {
+		case <-dpi.stop:
+			return nil
+		case err := <-watcher.Errors:
+			logger.Reason(err).Errorf("error watching devices and device plugin directory")
+		case event := <-watcher.Events:
+			logger.V(4).Infof("health Event: %v", event)
+			if monDevId, exist := monitoredDevices[event.Name]; exist {
+				// Health in this case is if the device path actually exists
+				if event.Op == fsnotify.Create {
+					logger.Infof("monitored device %s appeared", dpi.resourceName)
+					dpi.health <- deviceHealth{
+						DevId:  monDevId,
+						Health: pluginapi.Healthy,
+					}
+				} else if (event.Op == fsnotify.Remove) || (event.Op == fsnotify.Rename) {
+					logger.Infof("monitored device %s disappeared", dpi.resourceName)
+					dpi.health <- deviceHealth{
+						DevId:  monDevId,
+						Health: pluginapi.Unhealthy,
+					}
+				}
+			} else if event.Name == dpi.socketPath && event.Op == fsnotify.Remove {
+				logger.Infof("device socket file for device %s was removed, kubelet probably restarted.", dpi.resourceName)
+				return nil
+			}
+		}
+	}
 }
 
 func (dpi *USBDevicePlugin) GetDevicePath() string {
@@ -280,17 +364,26 @@ func discoverPermittedHostUSBDevices(supportedUSBDeviceMap map[string]string) ma
 	usbDevicesMap := make(map[string][]*USBDevice)
 
 	for addr, resourceName := range supportedUSBDeviceMap {
-		addarr := strings.Split(addr, ":")
+		addarr := strings.Split(addr, "-")
 
 		usbdev := &USBDevice{
-			VendorID:  addarr[0],
-			ProductID: addarr[1],
+			BusNum: addarr[0],
+			DevNum: addarr[1],
 		}
 
-		// TODO: looping through the /dev/usb/bus/XXXX to look for the devices as mapping
+		// Confirm the path is valid and thus device is available
+		fullpathToCheck := filepath.Join(usbDevicePath, usbdev.BusNum, usbdev.DevNum)
+		_, err := os.Stat(fullpathToCheck)
+		if err != nil {
+			log.DefaultLogger().Reason(err).Errorf("failed identify any usb device at %s", fullpathToCheck)
+			return nil
+		}
+
+		usbdev.FullDevPath = fullpathToCheck
+		log.DefaultLogger().V(4).Infof("Found usb device at %s", usbdev.FullDevPath)
+
 		usbDevicesMap[resourceName] = append(usbDevicesMap[resourceName], usbdev)
 	}
-
 	return usbDevicesMap
 }
 
