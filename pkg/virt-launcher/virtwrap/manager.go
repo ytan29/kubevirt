@@ -41,6 +41,7 @@ import (
 
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/generic"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/gpu"
+	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/usb"
 
 	"kubevirt.io/kubevirt/pkg/downwardmetrics"
 	"kubevirt.io/kubevirt/pkg/network/cache"
@@ -816,6 +817,13 @@ func (l *LibvirtDomainManager) generateConverterContext(vmi *v1.VirtualMachineIn
 			return nil, err
 		}
 		c.GPUHostDevices = gpuHostDevices
+
+		logger.Reason(err).Error("=================== attempting usb.CreateHostDevices")
+		usbHostDevices, err := usb.CreateHostDevices(vmi.Spec.Domain.Devices.USBs)
+		if err != nil {
+			return nil, err
+		}
+		c.USBHostDevices = usbHostDevices
 	}
 
 	return c, nil

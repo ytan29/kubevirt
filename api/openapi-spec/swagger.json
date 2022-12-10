@@ -15897,6 +15897,14 @@
       "description": "Whether to emulate a TPM device.",
       "$ref": "#/definitions/v1.TPMDevice"
      },
+     "usbs": {
+      "description": "Whether to attach a USB device to the vmi.",
+      "type": "array",
+      "items": {
+       "$ref": "#/definitions/v1.USB"
+      },
+      "x-kubernetes-list-type": "atomic"
+     },
      "useVirtioTransitional": {
       "description": "Fall back to legacy virtio 0.9 support if virtio bus is selected on devices. This is helpful for old machines like CentOS6 or RHEL6 which do not understand virtio_non_transitional (virtio 1.0).",
       "type": "boolean"
@@ -18075,6 +18083,26 @@
      "tscFrequency": {
       "type": "integer",
       "format": "int64"
+     }
+    }
+   },
+   "v1.USB": {
+    "type": "object",
+    "required": [
+     "name",
+     "deviceName"
+    ],
+    "properties": {
+     "deviceName": {
+      "type": "string"
+     },
+     "name": {
+      "description": "Name of the USB device as exposed by a device plugin",
+      "type": "string"
+     },
+     "tag": {
+      "description": "If specified, the virtual network interface address and its tag will be provided to the guest via config drive",
+      "type": "string"
      }
     }
    },
