@@ -21,6 +21,7 @@ package hostdevice
 
 import (
 	"fmt"
+	"strings"
 
 	v1 "kubevirt.io/api/core/v1"
 	"kubevirt.io/client-go/log"
@@ -58,14 +59,24 @@ func CreateMDEVHostDevices(hostDevicesData []HostDeviceMetaData, mdevAddrPool Ad
 	return createHostDevices(hostDevicesData, mdevAddrPool, createMDEVHostDevice)
 }
 
+func CreateUSBHostDevices(hostDevicesData []HostDeviceMetaData, usbAddrPool AddressPooler) ([]api.HostDevice, error) {
+	return createHostDevices(hostDevicesData, usbAddrPool, createUSBHostDevice)
+}
+
 func createHostDevices(hostDevicesData []HostDeviceMetaData, addrPool AddressPooler, createHostDev createHostDevice) ([]api.HostDevice, error) {
 	var hostDevices []api.HostDevice
 
+	log.Log.Infof("==========   hostDevicesData: %v", hostDevicesData)
+	// sample
+	// AliasPrefix:  usb-
+	// Name:         usbdev
+	// ResourceName: generic/hid-mouse
 	for _, hostDeviceData := range hostDevicesData {
 		address, err := addrPool.Pop(hostDeviceData.ResourceName)
 		if err != nil {
 			return nil, fmt.Errorf(failedCreateHostDeviceFmt, hostDeviceData.Name, err)
 		}
+		log.Log.Infof("==========   address: %s", address)
 
 		// if pop succeeded but the address is empty, ignore the device and let the caller
 		// decide if this is acceptable or not.
@@ -135,6 +146,24 @@ func createMDEVHostDevice(hostDeviceData HostDeviceMetaData, mdevUUID string) (*
 		Type:  "mdev",
 		Mode:  "subsystem",
 		Model: "vfio-pci",
+	}
+	return domainHostDevice, nil
+}
+
+func createUSBHostDevice(hostDeviceData HostDeviceMetaData, busdevNum string) (*api.HostDevice, error) {
+	split := strings.Split(busdevNum, "-")
+	// busdevNum = addrPool.Pop(hostDeviceData.ResourceName) = [hostDeviceData.ResourceName].value
+	domainHostDevice := &api.HostDevice{
+		// Alias: api.NewUserDefinedAlias(hostDeviceData.AliasPrefix + hostDeviceData.Name),
+		Source: api.HostDeviceSource{
+			Address: &api.Address{
+				Bus:    split[0],
+				Device: split[1],
+			},
+		},
+		Type:    "usb",
+		Mode:    "subsystem",
+		Managed: "yes",
 	}
 	return domainHostDevice, nil
 }

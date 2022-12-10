@@ -105,6 +105,7 @@ type ConverterContext struct {
 	SRIOVDevices          []api.HostDevice
 	GenericHostDevices    []api.HostDevice
 	GPUHostDevices        []api.HostDevice
+	USBHostDevices        []api.HostDevice
 	EFIConfiguration      *EFIConfiguration
 	MemBalloonStatsPeriod uint
 	UseVirtioTransitional bool
