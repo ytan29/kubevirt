@@ -763,7 +763,8 @@ func (PciHostDevice) SwaggerDoc() map[string]string {
 
 func (UsbHostDevice) SwaggerDoc() map[string]string {
 	return map[string]string{
-		"": "UsbHostDevice represents a host usb device allowed for passthrough\n+k8s:openapi-gen=true",
+		"":                  "UsbHostDevice represents a host usb device allowed for passthrough\n+k8s:openapi-gen=true",
+		"usbBusDevSelector": "USBVendorSelector        string `json:\"usbVendorSelector\"`",
 	}
 }
 

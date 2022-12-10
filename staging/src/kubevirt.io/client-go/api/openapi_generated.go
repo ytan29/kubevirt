@@ -20169,10 +20169,11 @@ func schema_kubevirtio_api_core_v1_UsbHostDevice(ref common.ReferenceCallback) c
 				Description: "UsbHostDevice represents a host usb device allowed for passthrough",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"usbVendorSelector": {
+					"usbBusDevSelector": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "USBVendorSelector        string `json:\"usbVendorSelector\"`",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"resourceName": {
@@ -20188,7 +20189,7 @@ func schema_kubevirtio_api_core_v1_UsbHostDevice(ref common.ReferenceCallback) c
 						},
 					},
 				},
-				Required: []string{"usbVendorSelector", "resourceName"},
+				Required: []string{"usbBusDevSelector", "resourceName"},
 			},
 		},
 	}

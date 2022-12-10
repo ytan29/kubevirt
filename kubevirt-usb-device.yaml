@@ -17,7 +17,8 @@ spec:
         virtOperator: 6
     permittedHostDevices:
       usbDevices:
-      - usbVendorSelector: "046d:c06a"
+      # - usbVendorSelector: "046d:c06a"
+      - usbBusDevSelector: "1-9"
         resourceName: "logitech/hid-mouse"
         externalResourceProvider: false
       pciHostDevices:
