@@ -194,6 +194,7 @@ func (dpi *PCIDevicePlugin) ListAndWatch(_ *pluginapi.Empty, s pluginapi.DeviceP
 }
 
 func (dpi *PCIDevicePlugin) Allocate(_ context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
+	log.Log.Info("===================allocate pci===================")
 	resourceNameEnvVar := util.ResourceNameToEnvVar(v1.PCIResourcePrefix, dpi.resourceName)
 	allocatedDevices := []string{}
 	resp := new(pluginapi.AllocateResponse)

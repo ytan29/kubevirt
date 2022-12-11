@@ -20223,9 +20223,8 @@ func schema_kubevirtio_api_core_v1_UsbHostDevice(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"usbBusDevSelector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "USBVendorSelector        string `json:\"usbVendorSelector\"`",
-							Type:        []string{"string"},
-							Format:      "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"resourceName": {
