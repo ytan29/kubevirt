@@ -71,6 +71,7 @@ type USBDevicePlugin struct {
 
 func NewUSBDevicePlugin(usbDevices []*USBDevice, resourceName string) *USBDevicePlugin {
 	serverSock := SocketPath(strings.Replace(resourceName, "/", "-", -1))
+	log.DefaultLogger().Infof("=========== NewUSBDevicePlugin socketPath %s", serverSock)
 
 	initHandler()
 
@@ -189,16 +190,24 @@ func (dpi *USBDevicePlugin) ListAndWatch(_ *pluginapi.Empty, s pluginapi.DeviceP
 
 func (dpi *USBDevicePlugin) Allocate(_ context.Context, r *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
 	log.Log.Info("===================allocate usb===================")
+	log.DefaultLogger().Infof("Allocate: resourceName: %s", dpi.resourceName)
 	resourceNameEnvVar := util.ResourceNameToEnvVar(v1.USBResourcePrefix, dpi.resourceName)
+	log.DefaultLogger().Infof("Allocate: resourceNameEnvVar: %s", resourceNameEnvVar)
 	allocatedDevices := []string{}
 	resp := new(pluginapi.AllocateResponse)
 	containerResponse := new(pluginapi.ContainerAllocateResponse)
 
 	for _, request := range r.ContainerRequests {
+		log.DefaultLogger().Infof("Allocate: request: %v", request)
 		deviceSpecs := make([]*pluginapi.DeviceSpec, 0)
 		for _, devID := range request.DevicesIDs {
+			log.DefaultLogger().Infof("Allocate: devID: %s", devID)
 			allocatedDevices = append(allocatedDevices, dpi.resourceName)
-			deviceSpecs = append(deviceSpecs, formatVFIODeviceSpecs(devID)...)
+
+			formattedUSB := formatUSBDeviceSpecs(devID)
+			log.DefaultLogger().Infof("Allocate: formatted usb: %v", formattedUSB)
+
+			deviceSpecs = append(deviceSpecs, formattedUSB...)
 		}
 		containerResponse.Devices = deviceSpecs
 		envVar := make(map[string]string)
@@ -342,7 +351,9 @@ func (dpi *USBDevicePlugin) register() error {
 }
 
 func (dpi *USBDevicePlugin) cleanup() error {
-
+	if err := os.Remove(dpi.socketPath); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
 	return nil
 }
 

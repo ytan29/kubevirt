@@ -261,6 +261,24 @@ func formatVFIODeviceSpecs(devID string) []*v1beta1.DeviceSpec {
 	return devSpecs
 }
 
+func formatUSBDeviceSpecs(devID string) []*v1beta1.DeviceSpec {
+	// always add /dev/vfio/vfio device as well
+	devSpecs := make([]*v1beta1.DeviceSpec, 0)
+	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
+		HostPath:      usbDevicePath,
+		ContainerPath: usbDevicePath,
+		Permissions:   "mrw",
+	})
+
+	usbDevPath := filepath.Join(usbDevicePath, devID)
+	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
+		HostPath:      usbDevPath,
+		ContainerPath: usbDevPath,
+		Permissions:   "mrw",
+	})
+	return devSpecs
+}
+
 type deviceHealth struct {
 	DevId  string
 	Health string
