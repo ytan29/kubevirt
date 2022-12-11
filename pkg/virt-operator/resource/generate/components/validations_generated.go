@@ -977,7 +977,6 @@ var CRDsValidation map[string]string = map[string]string{
                       resourceName:
                         type: string
                       usbBusDevSelector:
-                        description: USBVendorSelector        string 'json:"usbVendorSelector"'
                         type: string
                     required:
                     - resourceName

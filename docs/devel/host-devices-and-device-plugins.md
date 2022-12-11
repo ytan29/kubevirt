@@ -20,8 +20,8 @@ configuration:
     - mdevNameSelector: "GRID T4-1Q"
       resourceName: "nvidia.com/GRID_T4-1Q"
     usbDevices:
-    - usbVendorSelector: "046d:c06a"
-      resourceName: "usb/logitech"
+    - usbBusDevSelector: "001:002"
+      resourceName: "generic/hid-mouse"
 ```
 
 ### Device plugins for host devices assignment in KubeVirt

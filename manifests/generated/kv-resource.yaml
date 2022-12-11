@@ -503,7 +503,6 @@ spec:
                             resourceName:
                               type: string
                             usbBusDevSelector:
-                              description: USBVendorSelector        string 'json:"usbVendorSelector"
                               type: string
                           required:
                           - resourceName
@@ -3240,7 +3239,6 @@ spec:
                             resourceName:
                               type: string
                             usbBusDevSelector:
-                              description: USBVendorSelector        string 'json:"usbVendorSelector"
                               type: string
                           required:
                           - resourceName
