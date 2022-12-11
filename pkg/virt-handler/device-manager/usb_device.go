@@ -151,13 +151,7 @@ func (dpi *USBDevicePlugin) Start(stop <-chan struct{}) (err error) {
 }
 
 func (dpi *USBDevicePlugin) ListAndWatch(_ *pluginapi.Empty, s pluginapi.DevicePlugin_ListAndWatchServer) error {
-	// FIXME: sending an empty list up front should not be needed. This is a workaround for:
-	// https://github.com/kubevirt/kubevirt/issues/1196
-	// This can safely be removed once supported upstream Kubernetes is 1.10.3 or higher.
 	log.Log.Info("===================list and watch usb===================")
-	emptyList := []*pluginapi.Device{}
-	s.Send(&pluginapi.ListAndWatchResponse{Devices: emptyList})
-
 	s.Send(&pluginapi.ListAndWatchResponse{Devices: dpi.devs})
 
 	done := false
@@ -169,6 +163,7 @@ func (dpi *USBDevicePlugin) ListAndWatch(_ *pluginapi.Empty, s pluginapi.DeviceP
 					dev.Health = devHealth.Health
 				}
 			}
+			log.Log.Info("health status s.Send(&pluginapi.ListAndWatchResponse{Devices: dpi.devs})")
 			s.Send(&pluginapi.ListAndWatchResponse{Devices: dpi.devs})
 		case <-dpi.stop:
 			done = true
@@ -181,6 +176,7 @@ func (dpi *USBDevicePlugin) ListAndWatch(_ *pluginapi.Empty, s pluginapi.DeviceP
 	}
 	// Send empty list to increase the chance that the kubelet acts fast on stopped device plugins
 	// There exists no explicit way to deregister devices
+	emptyList := []*pluginapi.Device{}
 	if err := s.Send(&pluginapi.ListAndWatchResponse{Devices: emptyList}); err != nil {
 		log.DefaultLogger().Reason(err).Infof("%s device plugin failed to deregister", dpi.resourceName)
 	}
@@ -245,17 +241,21 @@ func (dpi *USBDevicePlugin) healthCheck() error {
 		if !errors.Is(err, os.ErrNotExist) {
 			return fmt.Errorf("could not stat the device: %v", err)
 		}
+		logger.Warningf("device '%s' is not present, the device plugin can't expose it.", dpi.devicePath)
+		dpi.health <- deviceHealth{Health: pluginapi.Unhealthy}
 	}
 
 	// probe all devices
 	for _, dev := range dpi.devs {
 		usbDevice := filepath.Join(devicePath, dev.ID)
 		err = watcher.Add(usbDevice)
+		logger.Infof("watching %s", usbDevice)
 		if err != nil {
 			return fmt.Errorf("failed to add the device %s to the watcher: %v", usbDevice, err)
 		}
 		monitoredDevices[usbDevice] = dev.ID
 	}
+	logger.Infof("device '%s' is present.", dpi.devicePath)
 
 	dirName = filepath.Dir(dpi.socketPath)
 	err = watcher.Add(dirName)
@@ -276,24 +276,35 @@ func (dpi *USBDevicePlugin) healthCheck() error {
 			logger.Reason(err).Errorf("error watching devices and device plugin directory")
 		case event := <-watcher.Events:
 			logger.V(4).Infof("health Event: %v", event)
-			if monDevId, exist := monitoredDevices[event.Name]; exist {
+			// if monDevId, exist := monitoredDevices[event.Name]; exist {
+			// 	// Health in this case is if the device path actually exists
+			// 	if event.Op == fsnotify.Create {
+			// 		logger.Infof("monitored device %s appeared", dpi.resourceName)
+			// 		dpi.health <- deviceHealth{
+			// 			DevId:  monDevId,
+			// 			Health: pluginapi.Healthy,
+			// 		}
+			// 	} else if (event.Op == fsnotify.Remove) || (event.Op == fsnotify.Rename) {
+			// 		logger.Infof("monitored device %s disappeared", dpi.resourceName)
+			// 		dpi.health <- deviceHealth{
+			// 			DevId:  monDevId,
+			// 			Health: pluginapi.Unhealthy,
+			// 		}
+			// 	}
+			if event.Name == devicePath {
 				// Health in this case is if the device path actually exists
 				if event.Op == fsnotify.Create {
 					logger.Infof("monitored device %s appeared", dpi.resourceName)
-					dpi.health <- deviceHealth{
-						DevId:  monDevId,
-						Health: pluginapi.Healthy,
-					}
+					dpi.health <- deviceHealth{Health: pluginapi.Healthy}
 				} else if (event.Op == fsnotify.Remove) || (event.Op == fsnotify.Rename) {
 					logger.Infof("monitored device %s disappeared", dpi.resourceName)
-					dpi.health <- deviceHealth{
-						DevId:  monDevId,
-						Health: pluginapi.Unhealthy,
-					}
+					dpi.health <- deviceHealth{Health: pluginapi.Unhealthy}
 				}
 			} else if event.Name == dpi.socketPath && event.Op == fsnotify.Remove {
 				logger.Infof("device socket file for device %s was removed, kubelet probably restarted.", dpi.resourceName)
 				return nil
+			} else {
+				logger.Infof("something else....")
 			}
 		}
 	}
