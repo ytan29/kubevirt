@@ -1605,12 +1605,13 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 			Model: "qemu-xhci",
 		})
 	} else {
+		// causing issue, need to check if we does pass through or not!!!
 		// disable usb controller
-		domain.Spec.Devices.Controllers = append(domain.Spec.Devices.Controllers, api.Controller{
-			Type:  "usb",
-			Index: "0",
-			Model: "none",
-		})
+		// domain.Spec.Devices.Controllers = append(domain.Spec.Devices.Controllers, api.Controller{
+		// 	Type:  "usb",
+		// 	Index: "0",
+		// 	Model: "none",
+		// })
 	}
 
 	if needsSCSIControler(vmi) {
@@ -1793,6 +1794,7 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 	}
 	domain.Spec.Devices.Interfaces = append(domain.Spec.Devices.Interfaces, domainInterfaces...)
 	domain.Spec.Devices.HostDevices = append(domain.Spec.Devices.HostDevices, c.SRIOVDevices...)
+	domain.Spec.Devices.HostDevices = append(domain.Spec.Devices.HostDevices, c.USBHostDevices...)
 
 	// Add Ignition Command Line if present
 	ignitiondata, _ := vmi.Annotations[v1.IgnitionAnnotation]

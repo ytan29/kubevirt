@@ -1003,7 +1003,7 @@ type GraphicsListen struct {
 }
 
 type Address struct {
-	Type       string `xml:"type,attr"`
+	Type       string `xml:"type,attr,omitempty"`
 	Domain     string `xml:"domain,attr,omitempty"`
 	Bus        string `xml:"bus,attr"`
 	Device     string `xml:"device,attr"`

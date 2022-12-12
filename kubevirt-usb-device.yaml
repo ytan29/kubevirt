@@ -18,12 +18,12 @@ spec:
     permittedHostDevices:
       usbDevices:
       - usbBusDevSelector: "001-002"
-        resourceName: "generic/hid-mouse"
+        resourceName: "generic.com/hid-mouse"
         externalResourceProvider: false
-      - usbBusDevSelector: "001-003"
-        resourceName: "generic/hid-mouse"
-        externalResourceProvider: false
-      pciHostDevices:
-      - pciVendorSelector: "8086:4680"
-        resourceName: "intel.com/sriov-gpudevice"
-        externalResourceProvider: false
+      # - usbBusDevSelector: "001-003"
+      #   resourceName: "generic.com/hid-mouse"
+      #   externalResourceProvider: false
+      # pciHostDevices:
+      # - pciVendorSelector: "8086:4680"
+      #   resourceName: "intel.com/sriov-gpudevice"
+      #   externalResourceProvider: false
