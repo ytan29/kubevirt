@@ -818,11 +818,12 @@ func (l *LibvirtDomainManager) generateConverterContext(vmi *v1.VirtualMachineIn
 		}
 		c.GPUHostDevices = gpuHostDevices
 
-		logger.V(4).Infof("=================== attempting usb.CreateHostDevices")
+		logger.V(4).Infof("=================== attempting usb.CreateHostDevices %v: ", vmi.Spec.Domain.Devices.USBs)
 		usbHostDevices, err := usb.CreateHostDevices(vmi.Spec.Domain.Devices.USBs)
 		if err != nil {
 			return nil, err
 		}
+		logger.V(4).Infof("=================== usb.CreateHostDevices: %v", usbHostDevices)
 		c.USBHostDevices = usbHostDevices
 	}
 
@@ -843,6 +844,7 @@ func (l *LibvirtDomainManager) SyncVMI(vmi *v1.VirtualMachineInstance, allowEmul
 		return nil, err
 	}
 
+	logger.Info("========== conversion attempt!!! ")
 	if err := converter.Convert_v1_VirtualMachineInstance_To_api_Domain(vmi, domain, c); err != nil {
 		logger.Error("Conversion failed.")
 		return nil, err
@@ -1795,12 +1797,15 @@ func (l *LibvirtDomainManager) buildDevicesMetadata(vmi *v1.VirtualMachineInstan
 			)
 		}
 	}
-
+	// AliasPrefix:  usb-
+	// Name:         usbdev
+	// ResourceName: generic/hid-mouse
 	hostDevices := devices.HostDevices
 	for _, dev := range hostDevices {
 		devAliasNoPrefix := strings.Replace(dev.Alias.GetName(), netsriov.AliasPrefix, "", -1)
 		hostDevAliasNoPrefix := strings.Replace(dev.Alias.GetName(), generic.AliasPrefix, "", -1)
 		gpuDevAliasNoPrefix := strings.Replace(dev.Alias.GetName(), gpu.AliasPrefix, "", -1)
+		// usbDevAliasNoPrefix := strings.Replace(dev.Alias.GetName(), usb.AliasPrefix, "", -1)
 		if data, exist := taggedInterfaces[devAliasNoPrefix]; exist {
 			deviceNumaNode, deviceAlignedCPUs := getDeviceNUMACPUAffinity(dev, vmi, domainSpec)
 			devicesMetadata = addToDeviceMetadata(cloudinit.NICMetadataType,

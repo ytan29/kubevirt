@@ -38,11 +38,13 @@ func extractResources(usbDevices []v1.USB) []string {
 	for _, usbDevice := range usbDevices {
 		log.Log.Warningf("===== usbDevice.DeviceName %s", usbDevice.DeviceName)
 		resourceSet[usbDevice.DeviceName] = struct{}{}
+		log.Log.Warningf("===== resourceSet =%v", resourceSet)
 	}
 
 	var resources []string
 	for resource, _ := range resourceSet {
 		resources = append(resources, resource)
 	}
+	log.Log.Warningf("===== returning resources =%v", resources)
 	return resources
 }

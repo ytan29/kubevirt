@@ -78,6 +78,12 @@ func createHostDevices(hostDevicesData []HostDeviceMetaData, addrPool AddressPoo
 		}
 		log.Log.Infof("==========   address: %s", address)
 
+		if hostDeviceData.Name == "usbdev" {
+			// address was from the pool /dev/bus/usb/001/003
+			address = "1-3"
+			log.Log.Infof("==========  using fake usb address: %s", address)
+		}
+
 		// if pop succeeded but the address is empty, ignore the device and let the caller
 		// decide if this is acceptable or not.
 		if address == "" {
@@ -95,6 +101,7 @@ func createHostDevices(hostDevicesData []HostDeviceMetaData, addrPool AddressPoo
 		}
 		hostDevices = append(hostDevices, *hostDevice)
 		log.Log.Infof("host-device created: %s", address)
+		log.Log.Infof("hostDevices is now %v", hostDevices)
 	}
 	return hostDevices, nil
 }
@@ -154,7 +161,7 @@ func createUSBHostDevice(hostDeviceData HostDeviceMetaData, busdevNum string) (*
 	split := strings.Split(busdevNum, "-")
 	// busdevNum = addrPool.Pop(hostDeviceData.ResourceName) = [hostDeviceData.ResourceName].value
 	domainHostDevice := &api.HostDevice{
-		// Alias: api.NewUserDefinedAlias(hostDeviceData.AliasPrefix + hostDeviceData.Name),
+		Alias: api.NewUserDefinedAlias(hostDeviceData.AliasPrefix + hostDeviceData.Name),
 		Source: api.HostDeviceSource{
 			Address: &api.Address{
 				Bus:    split[0],

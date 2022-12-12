@@ -23,6 +23,7 @@ import (
 	"fmt"
 
 	v1 "kubevirt.io/api/core/v1"
+	"kubevirt.io/client-go/log"
 
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/api"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice"
@@ -48,6 +49,7 @@ func CreateHostDevicesFromPools(vmiUSBs []v1.USB, usbAddressPool hostdevice.Addr
 	}
 
 	if err := validateCreationOfAllDevices(vmiUSBs, usbHostDevices); err != nil {
+		log.Log.Warningf("===== hacking to return devices")
 		return nil, fmt.Errorf(failedCreateUSBHostDeviceFmt, err)
 	}
 

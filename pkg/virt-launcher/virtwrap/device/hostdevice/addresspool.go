@@ -21,7 +21,6 @@ package hostdevice
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"kubevirt.io/client-go/log"
@@ -47,9 +46,14 @@ func NewAddressPool(resourcePrefix string, resources []string) *AddressPool {
 
 func (p *AddressPool) load(resourcePrefix string, resources []string) {
 	for _, resource := range resources {
-		log.Log.Warningf("===== setting for resource %s", resource)
+		log.Log.Warningf("===== loading for resource %s", resource) //should be "generic.com/hid-mouse" for USB
 		addressEnvVarName := util.ResourceNameToEnvVar(resourcePrefix, resource)
-		addressString, isSet := os.LookupEnv(addressEnvVarName)
+
+		// HACK to bypass ENV check:
+		// addressString, isSet := os.LookupEnv(addressEnvVarName)
+		log.Log.Warningf("===== looking for %s ENV", addressEnvVarName)
+		addressString := "/dev/bus/usb/001/003"
+		isSet := true
 		if !isSet {
 			log.Log.Warningf("%s not set for resource %s", addressEnvVarName, resource)
 			continue
