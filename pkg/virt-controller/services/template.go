@@ -617,19 +617,22 @@ func (t *templateService) newContainerSpecRenderer(vmi *v1.VirtualMachineInstanc
 		WithPorts(vmi),
 		WithCapabilities(vmi),
 	}
-	if util.IsNonRootVMI(vmi) {
-		computeContainerOpts = append(computeContainerOpts, WithNonRoot(userId))
-	}
-	if t.IsPPC64() {
-		computeContainerOpts = append(computeContainerOpts, WithPrivileged())
-	}
-	if vmi.Spec.ReadinessProbe != nil {
-		computeContainerOpts = append(computeContainerOpts, WithReadinessProbe(vmi))
-	}
 
-	if vmi.Spec.LivenessProbe != nil {
-		computeContainerOpts = append(computeContainerOpts, WithLivelinessProbe(vmi))
-	}
+	// TODO: Rather than WithPrivileged(), we shall be using proper securityContext()
+	computeContainerOpts = append(computeContainerOpts, WithPrivileged())
+	// if util.IsNonRootVMI(vmi) {
+	// 	computeContainerOpts = append(computeContainerOpts, WithNonRoot(userId))
+	// }
+	// if t.IsPPC64() {
+	// 	computeContainerOpts = append(computeContainerOpts, WithPrivileged())
+	// }
+	// if vmi.Spec.ReadinessProbe != nil {
+	// 	computeContainerOpts = append(computeContainerOpts, WithReadinessProbe(vmi))
+	// }
+
+	// if vmi.Spec.LivenessProbe != nil {
+	// 	computeContainerOpts = append(computeContainerOpts, WithLivelinessProbe(vmi))
+	// }
 
 	const computeContainerName = "compute"
 	containerRenderer := NewContainerSpecRenderer(
