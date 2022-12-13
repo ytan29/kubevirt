@@ -377,6 +377,36 @@ func withSRIOVPciMapAnnotation() VolumeRendererOption {
 	}
 }
 
+func withUSBMapAnnotation() VolumeRendererOption {
+	return func(renderer *VolumeRenderer) error {
+		usbBasePath := "/dev/bus/usb"
+		var hostPathType k8sv1.HostPathType
+		hostPathType = k8sv1.HostPathDirectory
+
+		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
+			Name:      "usb",
+			MountPath: usbBasePath,
+		})
+
+		renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{
+			Name: "usb",
+			VolumeSource: k8sv1.VolumeSource{
+				HostPath: &k8sv1.HostPathVolumeSource{
+					Path: usbBasePath,
+					Type: &hostPathType,
+				},
+			},
+		})
+
+		// renderer.podVolumes = append(renderer.podVolumes,
+		// 	downwardAPIDirVolume(
+		// 		"usb", usbBasePath, fmt.Sprintf("metadata.annotations['%s']", sriov.NetworkPCIMapAnnot)),
+		// )
+
+		return nil
+	}
+}
+
 func imgPullSecrets(volumes ...v1.Volume) []k8sv1.LocalObjectReference {
 	var imagePullSecrets []k8sv1.LocalObjectReference
 	for _, volume := range volumes {
