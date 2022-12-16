@@ -664,6 +664,8 @@ func (t *templateService) newVolumeRenderer(vmi *v1.VirtualMachineInstance, name
 	log.Log.Info("arif adding USB")
 	// arif hack here to always enable USB
 	volumeOpts = append(volumeOpts, withUSBMapAnnotation())
+	// flagXY
+	// is display need volume
 
 	if util.IsVMIVirtiofsEnabled(vmi) {
 		volumeOpts = append(volumeOpts, withVirioFS())

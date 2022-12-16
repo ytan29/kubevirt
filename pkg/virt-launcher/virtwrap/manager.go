@@ -39,6 +39,7 @@ import (
 	"sync"
 	"time"
 
+	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/display"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/generic"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/gpu"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/usb"
@@ -825,6 +826,9 @@ func (l *LibvirtDomainManager) generateConverterContext(vmi *v1.VirtualMachineIn
 		}
 		logger.V(4).Infof("=================== usb.CreateHostDevices: %v", usbHostDevices)
 		c.USBHostDevices = usbHostDevices
+
+		displayHostDevices, err := display.CreateHostDevices(vmi.Spec.Domain.Devices.Displays)
+		c.DisplayHostDevices = displayHostDevices
 	}
 
 	return c, nil

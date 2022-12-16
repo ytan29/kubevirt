@@ -49,6 +49,7 @@ func (p *AddressPool) load(resourcePrefix string, resources []string) {
 		log.Log.Warningf("===== loading for resource %s", resource) //should be "generic.com/hid-mouse" for USB
 		addressEnvVarName := util.ResourceNameToEnvVar(resourcePrefix, resource)
 
+		// flagXY : no changes
 		// HACK to bypass ENV check:
 		// addressString, isSet := os.LookupEnv(addressEnvVarName)
 		log.Log.Warningf("===== looking for %s ENV", addressEnvVarName)

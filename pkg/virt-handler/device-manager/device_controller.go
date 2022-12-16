@@ -196,6 +196,26 @@ func (c *DeviceController) updatePermittedHostDevicePlugins() []Device {
 		return permittedDevices
 	}
 
+	// flagXY
+	if len(hostDevs.DisplayDevices) != 0 {
+		supportedDisplayDeviceMap := make(map[string]string)
+		for _, dev := range hostDevs.DisplayDevices {
+			log.Log.V(4).Infof("Permitted USB device in the cluster, ID: %s, resourceName: %s, externalProvider: %t",
+				strings.ToLower(dev.DisplayBusDevSelector),
+				dev.ResourceName,
+				dev.ExternalResourceProvider)
+			// do not add a device plugin for this resource if it's being provided via an external device plugin
+			if !dev.ExternalResourceProvider {
+				supportedDisplayDeviceMap[strings.ToLower(dev.DisplayBusDevSelector)] = dev.ResourceName
+			}
+		}
+		for resourceName, devices := range discoverPermittedHostUSBDevices(supportedDisplayDeviceMap) {
+			log.Log.V(4).Infof("Discovered USBs %d devices on the node for the resource: %s", len(devices), resourceName)
+			// add a device plugin only for new devices
+			permittedDevices = append(permittedDevices, NewUSBDevicePlugin(devices, resourceName))
+		}
+	}
+
 	if len(hostDevs.UsbDevices) != 0 {
 		supportedUSBDeviceMap := make(map[string]string)
 		for _, usbDev := range hostDevs.UsbDevices {

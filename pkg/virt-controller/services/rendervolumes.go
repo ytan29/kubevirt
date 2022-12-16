@@ -407,6 +407,13 @@ func withUSBMapAnnotation() VolumeRendererOption {
 	}
 }
 
+// FLAGXY
+func withDisplayMapAnnotation() VolumeRendererOption {
+	return func(renderer *VolumeRenderer) error {
+		return nil
+	}
+}
+
 func imgPullSecrets(volumes ...v1.Volume) []k8sv1.LocalObjectReference {
 	var imagePullSecrets []k8sv1.LocalObjectReference
 	for _, volume := range volumes {

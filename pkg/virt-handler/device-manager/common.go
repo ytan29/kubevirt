@@ -279,6 +279,24 @@ func formatUSBDeviceSpecs(devID string) []*v1beta1.DeviceSpec {
 	return devSpecs
 }
 
+// flagXY
+func formatDisplayDeviceSpecs(devID string) []*v1beta1.DeviceSpec {
+	devSpecs := make([]*v1beta1.DeviceSpec, 0)
+	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
+		HostPath:      displayDevicePath,
+		ContainerPath: displayDevicePath,
+		Permissions:   "mrw",
+	})
+
+	displayDevPath := filepath.Join(displayDevicePath, devID)
+	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
+		HostPath:      displayDevPath,
+		ContainerPath: displayDevPath,
+		Permissions:   "mrw",
+	})
+	return devSpecs
+}
+
 type deviceHealth struct {
 	DevId  string
 	Health string

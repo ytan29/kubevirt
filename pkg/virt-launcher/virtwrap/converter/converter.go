@@ -106,6 +106,7 @@ type ConverterContext struct {
 	GenericHostDevices    []api.HostDevice
 	GPUHostDevices        []api.HostDevice
 	USBHostDevices        []api.HostDevice
+	DisplayHostDevices    []api.HostDevice
 	EFIConfiguration      *EFIConfiguration
 	MemBalloonStatsPeriod uint
 	UseVirtioTransitional bool
@@ -1795,6 +1796,8 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 	domain.Spec.Devices.Interfaces = append(domain.Spec.Devices.Interfaces, domainInterfaces...)
 	domain.Spec.Devices.HostDevices = append(domain.Spec.Devices.HostDevices, c.SRIOVDevices...)
 	domain.Spec.Devices.HostDevices = append(domain.Spec.Devices.HostDevices, c.USBHostDevices...)
+	// flagXY
+	domain.Spec.Devices.HostDevices = append(domain.Spec.Devices.HostDevices, c.DisplayHostDevices...)
 
 	// Add Ignition Command Line if present
 	ignitiondata, _ := vmi.Annotations[v1.IgnitionAnnotation]
