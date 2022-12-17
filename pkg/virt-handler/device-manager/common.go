@@ -283,12 +283,12 @@ func formatUSBDeviceSpecs(devID string) []*v1beta1.DeviceSpec {
 func formatDisplayDeviceSpecs(devID string) []*v1beta1.DeviceSpec {
 	devSpecs := make([]*v1beta1.DeviceSpec, 0)
 	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
-		HostPath:      displayDevicePath,
-		ContainerPath: displayDevicePath,
+		HostPath:      "/sys/devices/pci0000:00/0000:00:",
+		ContainerPath: "/sys/devices/pci0000:00/0000:00:",
 		Permissions:   "mrw",
 	})
 
-	displayDevPath := filepath.Join(displayDevicePath, devID)
+	displayDevPath := filepath.Join("/sys/devices/pci0000:00/0000:00:", devID)
 	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
 		HostPath:      displayDevPath,
 		ContainerPath: displayDevPath,

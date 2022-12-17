@@ -827,7 +827,7 @@ func (l *LibvirtDomainManager) generateConverterContext(vmi *v1.VirtualMachineIn
 		logger.V(4).Infof("=================== usb.CreateHostDevices: %v", usbHostDevices)
 		c.USBHostDevices = usbHostDevices
 
-		displayHostDevices, err := display.CreateHostDevices(vmi.Spec.Domain.Devices.Displays)
+		displayHostDevices, _ := display.CreateHostDevices(vmi.Spec.Domain.Devices.Displays)
 		c.DisplayHostDevices = displayHostDevices
 	}
 
