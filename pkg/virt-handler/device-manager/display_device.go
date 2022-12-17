@@ -44,7 +44,7 @@ import (
 // flagXY
 
 const (
-	displayDevicePath = "/sys/devices/pci0000:00/0000:00:"
+	displayDevicePath = "/sys/devices/pci0000:00/"
 	displayBasePath   = "/sys/devices/pci0000:00/"
 )
 
@@ -176,6 +176,7 @@ func (dpi *DisplayDevicePlugin) ListAndWatch(_ *pluginapi.Empty, s pluginapi.Dev
 			break
 		}
 	}
+	//flagXY need to know why
 	// Send empty list to increase the chance that the kubelet acts fast on stopped device plugins
 	// There exists no explicit way to deregister devices
 	emptyList := []*pluginapi.Device{}
@@ -229,7 +230,7 @@ func (dpi *DisplayDevicePlugin) healthCheck() error {
 	defer watcher.Close()
 
 	// This way we don't have to mount /dev from the node
-	devicePath := filepath.Join(dpi.deviceRoot, dpi.devicePath)
+	devicePath := dpi.devicePath
 
 	// Start watching the files before we check for their existence to avoid races
 	dirName := filepath.Dir(devicePath)
@@ -249,7 +250,7 @@ func (dpi *DisplayDevicePlugin) healthCheck() error {
 
 	// probe all devices
 	for _, dev := range dpi.devs {
-		device := filepath.Join(devicePath, dev.ID)
+		device := devicePath + "0000:00:" + dev.ID
 		err = watcher.Add(device)
 		logger.Infof("watching %s", device)
 		if err != nil {
@@ -374,7 +375,7 @@ func discoverPermittedHostDisplayDevices(supportedDeviceMap map[string]string) m
 	devicesMap := make(map[string][]*DisplayDevice)
 
 	for addr, resourceName := range supportedDeviceMap {
-		addarr := strings.Split(addr, "-")
+		addarr := strings.Split(addr, ".")
 
 		dev := &DisplayDevice{
 			BusNum: addarr[0],

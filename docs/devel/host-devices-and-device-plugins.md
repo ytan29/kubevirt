@@ -22,6 +22,9 @@ configuration:
     usbDevices:
     - usbBusDevSelector: "001:002"
       resourceName: "generic/hid-mouse"
+    displayDevices:
+    - displayBusDevSelector: "02.1"
+      resourceName: "generic/display"
 ```
 
 ### Device plugins for host devices assignment in KubeVirt

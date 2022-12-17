@@ -15843,8 +15843,15 @@
        "$ref": "#/definitions/v1.Disk"
       }
      },
+     "displays": {
+      "description": "Whether to attach a Display device to the vmi.",
+      "type": "array",
+      "items": {
+       "$ref": "#/definitions/v1.Display"
+      },
+      "x-kubernetes-list-type": "atomic"
+     },
      "filesystems": {
-      "description": "Filesystems describes filesystem which is connected to the vmi.",
       "type": "array",
       "items": {
        "$ref": "#/definitions/v1.Filesystem"
@@ -15998,6 +16005,45 @@
     "properties": {
      "memoryLimit": {
       "$ref": "#/definitions/k8s.io.apimachinery.pkg.api.resource.Quantity"
+     }
+    }
+   },
+   "v1.Display": {
+    "type": "object",
+    "required": [
+     "name",
+     "deviceName"
+    ],
+    "properties": {
+     "deviceName": {
+      "type": "string"
+     },
+     "name": {
+      "description": "Name of the Display device as exposed by a device plugin",
+      "type": "string"
+     },
+     "tag": {
+      "description": "If specified, the virtual network interface address and its tag will be provided to the guest via config drive",
+      "type": "string"
+     }
+    }
+   },
+   "v1.DisplayHostDevice": {
+    "description": "DisplayHostDevice represents a host display device allowed for passthrough",
+    "type": "object",
+    "required": [
+     "displayBusDevSelector",
+     "resourceName"
+    ],
+    "properties": {
+     "displayBusDevSelector": {
+      "type": "string"
+     },
+     "externalResourceProvider": {
+      "type": "boolean"
+     },
+     "resourceName": {
+      "type": "string"
      }
     }
    },
@@ -17493,6 +17539,13 @@
     "description": "PermittedHostDevices holds information about devices allowed for passthrough",
     "type": "object",
     "properties": {
+     "displayDevices": {
+      "type": "array",
+      "items": {
+       "$ref": "#/definitions/v1.DisplayHostDevice"
+      },
+      "x-kubernetes-list-type": "atomic"
+     },
      "mediatedDevices": {
       "type": "array",
       "items": {
