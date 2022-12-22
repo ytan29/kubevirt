@@ -22,6 +22,9 @@ configuration:
     usbDevices:
     - usbBusDevSelector: "001:002"
       resourceName: "generic/hid-mouse"
+    - usbBusPortSelector: "1-9"
+      resourceName: "generic.com/hid-mouse"
+      externalResourceProvider: false
 ```
 
 ### Device plugins for host devices assignment in KubeVirt

@@ -37,6 +37,7 @@ type HostDeviceMetaData struct {
 	Name              string
 	ResourceName      string
 	VirtualGPUOptions *v1.VGPUOptions
+	BusPort           string
 	// DecorateHook is a function pointer that may be used to mutate the domain host-device
 	// with additional specific parameters. E.g. guest PCI address.
 	DecorateHook func(hostDevice *api.HostDevice) error
@@ -80,7 +81,7 @@ func createHostDevices(hostDevicesData []HostDeviceMetaData, addrPool AddressPoo
 
 		if hostDeviceData.Name == "usbdev" {
 			// address was from the pool /dev/bus/usb/001/003
-			address = "1-3"
+			address = "1-9"
 			log.Log.Infof("==========  using fake usb address: %s", address)
 		}
 
@@ -157,15 +158,15 @@ func createMDEVHostDevice(hostDeviceData HostDeviceMetaData, mdevUUID string) (*
 	return domainHostDevice, nil
 }
 
-func createUSBHostDevice(hostDeviceData HostDeviceMetaData, busdevNum string) (*api.HostDevice, error) {
-	split := strings.Split(busdevNum, "-")
+func createUSBHostDevice(hostDeviceData HostDeviceMetaData, busPortNum string) (*api.HostDevice, error) {
+	split := strings.Split(busPortNum, "-")
 	// busdevNum = addrPool.Pop(hostDeviceData.ResourceName) = [hostDeviceData.ResourceName].value
 	domainHostDevice := &api.HostDevice{
 		Alias: api.NewUserDefinedAlias(hostDeviceData.AliasPrefix + hostDeviceData.Name),
 		Source: api.HostDeviceSource{
 			Address: &api.Address{
-				Bus:    split[0],
-				Device: split[1],
+				Bus:  split[0],
+				Port: split[1],
 			},
 		},
 		Type:    "usb",

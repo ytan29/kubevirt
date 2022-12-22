@@ -20154,9 +20154,9 @@ func schema_kubevirtio_api_core_v1_USB(ref common.ReferenceCallback) common.Open
 							Format: "",
 						},
 					},
-					"tag": {
+					"busPort": {
 						SchemaProps: spec.SchemaProps{
-							Description: "If specified, the virtual network interface address and its tag will be provided to the guest via config drive",
+							Description: "If specified, the specific bus-port will be assigned instead",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -20221,7 +20221,7 @@ func schema_kubevirtio_api_core_v1_UsbHostDevice(ref common.ReferenceCallback) c
 				Description: "UsbHostDevice represents a host usb device allowed for passthrough",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"usbBusDevSelector": {
+					"usbBusPortSelector": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
 							Format: "",
@@ -20240,7 +20240,7 @@ func schema_kubevirtio_api_core_v1_UsbHostDevice(ref common.ReferenceCallback) c
 						},
 					},
 				},
-				Required: []string{"usbBusDevSelector", "resourceName"},
+				Required: []string{"usbBusPortSelector", "resourceName"},
 			},
 		},
 	}

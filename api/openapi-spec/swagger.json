@@ -18093,15 +18093,15 @@
      "deviceName"
     ],
     "properties": {
+     "busPort": {
+      "description": "If specified, the specific bus-port will be assigned instead",
+      "type": "string"
+     },
      "deviceName": {
       "type": "string"
      },
      "name": {
       "description": "Name of the USB device as exposed by a device plugin",
-      "type": "string"
-     },
-     "tag": {
-      "description": "If specified, the virtual network interface address and its tag will be provided to the guest via config drive",
       "type": "string"
      }
     }
@@ -18132,7 +18132,7 @@
     "description": "UsbHostDevice represents a host usb device allowed for passthrough",
     "type": "object",
     "required": [
-     "usbBusDevSelector",
+     "usbBusPortSelector",
      "resourceName"
     ],
     "properties": {
@@ -18142,7 +18142,7 @@
      "resourceName": {
       "type": "string"
      },
-     "usbBusDevSelector": {
+     "usbBusPortSelector": {
       "type": "string"
      }
     }

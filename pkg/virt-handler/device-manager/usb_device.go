@@ -42,16 +42,19 @@ import (
 )
 
 const (
+	usbSysFsPath  = "/sys/bus/usb/devices/"
 	usbDevicePath = "/dev/bus/usb"
 	usbBasePath   = "/sys/bus/usb/devices"
 )
 
 type USBDevice struct {
-	VendorID    string
-	ProductID   string
-	BusNum      string
-	DevNum      string
-	FullDevPath string
+	VendorID     string
+	ProductID    string
+	BusNum       string
+	DevNum       string
+	PortNum      string
+	FullDevPath  string
+	FullPortPath string
 }
 
 type USBDevicePlugin struct {
@@ -61,6 +64,7 @@ type USBDevicePlugin struct {
 	stop         <-chan struct{}
 	health       chan deviceHealth
 	devicePath   string
+	sysfsPath    string
 	resourceName string
 	done         chan struct{}
 	deviceRoot   string
@@ -81,6 +85,7 @@ func NewUSBDevicePlugin(usbDevices []*USBDevice, resourceName string) *USBDevice
 		socketPath:   serverSock,
 		resourceName: resourceName,
 		devicePath:   usbDevicePath,
+		sysfsPath:    usbSysFsPath,
 		deviceRoot:   util.HostRootMount,
 		health:       make(chan deviceHealth),
 		initialized:  false,
@@ -92,7 +97,8 @@ func NewUSBDevicePlugin(usbDevices []*USBDevice, resourceName string) *USBDevice
 func constructDPIdevicesFromUsb(usbDevices []*USBDevice) (devs []*pluginapi.Device) {
 	for _, usbDevice := range usbDevices {
 		dpiDev := &pluginapi.Device{
-			ID:     usbDevice.BusNum + "/" + usbDevice.DevNum,
+			// ID:     usbDevice.BusNum + "/" + usbDevice.DevNum,
+			ID:     usbDevice.BusNum + "-" + usbDevice.PortNum,
 			Health: pluginapi.Healthy,
 		}
 		devs = append(devs, dpiDev)
@@ -227,7 +233,7 @@ func (dpi *USBDevicePlugin) healthCheck() error {
 	defer watcher.Close()
 
 	// This way we don't have to mount /dev from the node
-	devicePath := filepath.Join(dpi.deviceRoot, dpi.devicePath)
+	devicePath := filepath.Join(dpi.deviceRoot, dpi.sysfsPath)
 
 	// Start watching the files before we check for their existence to avoid races
 	dirName := filepath.Dir(devicePath)
@@ -389,12 +395,12 @@ func discoverPermittedHostUSBDevices(supportedUSBDeviceMap map[string]string) ma
 		addarr := strings.Split(addr, "-")
 
 		usbdev := &USBDevice{
-			BusNum: addarr[0],
-			DevNum: addarr[1],
+			BusNum:  addarr[0],
+			PortNum: addarr[1],
 		}
 
-		// Confirm the path is valid and thus device is available
-		fullpathToCheck := filepath.Join(usbDevicePath, usbdev.BusNum, usbdev.DevNum)
+		// Confirm the path is valid and thus device is available, e.g. /sys/bus/usb/devices/1-9
+		fullpathToCheck := filepath.Join(usbSysFsPath, usbdev.BusNum+"-"+usbdev.PortNum)
 		_, err := os.Stat(fullpathToCheck)
 		if err != nil {
 			log.DefaultLogger().Reason(err).Errorf("failed identify any usb device at %s", fullpathToCheck)
@@ -402,7 +408,8 @@ func discoverPermittedHostUSBDevices(supportedUSBDeviceMap map[string]string) ma
 		}
 
 		usbdev.FullDevPath = fullpathToCheck
-		log.DefaultLogger().V(4).Infof("Found usb device at %s", usbdev.FullDevPath)
+		usbdev.FullPortPath = fullpathToCheck
+		log.DefaultLogger().V(4).Infof("Found valid usb port at %s", usbdev.FullPortPath)
 
 		usbDevicesMap[resourceName] = append(usbDevicesMap[resourceName], usbdev)
 	}

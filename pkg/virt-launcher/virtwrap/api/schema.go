@@ -1006,7 +1006,8 @@ type Address struct {
 	Type       string `xml:"type,attr,omitempty"`
 	Domain     string `xml:"domain,attr,omitempty"`
 	Bus        string `xml:"bus,attr"`
-	Device     string `xml:"device,attr"`
+	Device     string `xml:"device,attr,omitempty"`
+	Port       string `xml:"port,attr,omitempty"`
 	Slot       string `xml:"slot,attr,omitempty"`
 	Function   string `xml:"function,attr,omitempty"`
 	Controller string `xml:"controller,attr,omitempty"`

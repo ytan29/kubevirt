@@ -17,7 +17,7 @@ spec:
         virtOperator: 6
     permittedHostDevices:
       usbDevices:
-      - usbBusDevSelector: "001-002"
+      - usbBusPortSelector: "1-9"
         resourceName: "generic.com/hid-mouse"
         externalResourceProvider: false
       # - usbBusDevSelector: "001-003"

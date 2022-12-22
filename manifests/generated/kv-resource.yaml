@@ -502,11 +502,11 @@ spec:
                               type: boolean
                             resourceName:
                               type: string
-                            usbBusDevSelector:
+                            usbBusPortSelector:
                               type: string
                           required:
                           - resourceName
-                          - usbBusDevSelector
+                          - usbBusPortSelector
                           type: object
                         type: array
                         x-kubernetes-list-type: atomic
@@ -3238,11 +3238,11 @@ spec:
                               type: boolean
                             resourceName:
                               type: string
-                            usbBusDevSelector:
+                            usbBusPortSelector:
                               type: string
                           required:
                           - resourceName
-                          - usbBusDevSelector
+                          - usbBusPortSelector
                           type: object
                         type: array
                         x-kubernetes-list-type: atomic
