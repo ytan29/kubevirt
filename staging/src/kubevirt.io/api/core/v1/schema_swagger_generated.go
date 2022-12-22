@@ -245,7 +245,8 @@ func (Devices) SwaggerDoc() map[string]string {
 		"networkInterfaceMultiqueue": "If specified, virtual network interfaces configured with a virtio bus will also enable the vhost multiqueue feature for network devices. The number of queues created depends on additional factors of the VirtualMachineInstance, like the number of guest CPUs.\n+optional",
 		"gpus":                       "Whether to attach a GPU device to the vmi.\n+optional\n+listType=atomic",
 		"usbs":                       "Whether to attach a USB device to the vmi.\n+optional\n+listType=atomic",
-		"filesystems":                "Filesystems describes filesystem which is connected to the vmi.\n+optional\n+listType=atomic",
+		"displays":                   "Whether to attach a Display device to the vmi.\n+optional\n+listType=atomic",
+		"filesystems":                "+optional\n+listType=atomic",
 		"hostDevices":                "Whether to attach a host device to the vmi.\n+optional\n+listType=atomic",
 		"clientPassthrough":          "To configure and access client devices such as redirecting USB\n+optional",
 		"sound":                      "Whether to emulate a sound device.\n+optional",
@@ -301,6 +302,14 @@ func (USB) SwaggerDoc() map[string]string {
 	return map[string]string{
 		"":     "+k8s:openapi-gen=true",
 		"name": "Name of the USB device as exposed by a device plugin",
+		"tag":  "If specified, the virtual network interface address and its tag will be provided to the guest via config drive\n+optional",
+	}
+}
+
+func (Display) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"":     "+k8s:openapi-gen=true",
+		"name": "Name of the Display device as exposed by a device plugin",
 		"tag":  "If specified, the virtual network interface address and its tag will be provided to the guest via config drive\n+optional",
 	}
 }

@@ -40,7 +40,7 @@ const (
 const HotplugDiskDir = "/var/run/kubevirt/hotplug-disks/"
 
 /*
- ATTENTION: Rerun code generators when comments on structs or fields are modified.
+  ATTENTION: Rerun code generators when comments on structs or fields are modified.
 */
 
 // Represents a disk created on the cluster level
@@ -453,7 +453,10 @@ type Devices struct {
 	// +optional
 	// +listType=atomic
 	USBs []USB `json:"usbs,omitempty"`
-	// Filesystems describes filesystem which is connected to the vmi.
+	//Whether to attach a Display device to the vmi.
+	// +optional
+	// +listType=atomic
+	Displays []Display `json:"displays,omitempty"`
 	// +optional
 	// +listType=atomic
 	Filesystems []Filesystem `json:"filesystems,omitempty"`
@@ -547,6 +550,16 @@ type GPU struct {
 // +k8s:openapi-gen=true
 type USB struct {
 	// Name of the USB device as exposed by a device plugin
+	Name       string `json:"name"`
+	DeviceName string `json:"deviceName"`
+	// If specified, the virtual network interface address and its tag will be provided to the guest via config drive
+	// +optional
+	Tag string `json:"tag,omitempty"`
+}
+
+// +k8s:openapi-gen=true
+type Display struct {
+	// Name of the Display device as exposed by a device plugin
 	Name       string `json:"name"`
 	DeviceName string `json:"deviceName"`
 	// If specified, the virtual network interface address and its tag will be provided to the guest via config drive

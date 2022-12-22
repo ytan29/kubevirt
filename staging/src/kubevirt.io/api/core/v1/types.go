@@ -20,7 +20,7 @@
 package v1
 
 /*
- ATTENTION: Rerun code generators when comments on structs or fields are modified.
+  ATTENTION: Rerun code generators when comments on structs or fields are modified.
 */
 
 import (
@@ -2353,9 +2353,10 @@ type LogVerbosity struct {
 }
 
 const (
-	PCIResourcePrefix  = "PCI_RESOURCE"
-	MDevResourcePrefix = "MDEV_PCI_RESOURCE"
-	USBResourcePrefix  = "USB_PCI_RESOURCE"
+	PCIResourcePrefix     = "PCI_RESOURCE"
+	MDevResourcePrefix    = "MDEV_PCI_RESOURCE"
+	USBResourcePrefix     = "USB_PCI_RESOURCE"
+	DisplayResourcePrefix = "DISPLAY_PCI_RESOURCE"
 )
 
 // PermittedHostDevices holds information about devices allowed for passthrough
@@ -2366,6 +2367,8 @@ type PermittedHostDevices struct {
 	MediatedDevices []MediatedHostDevice `json:"mediatedDevices,omitempty"`
 	// +listType=atomic
 	UsbDevices []UsbHostDevice `json:"usbDevices,omitempty"`
+	// +listType=atomic
+	DisplayDevices []DisplayHostDevice `json:"displayDevices,omitempty"`
 }
 
 // PciHostDevice represents a host PCI device allowed for passthrough
@@ -2387,6 +2390,14 @@ type PciHostDevice struct {
 // +k8s:openapi-gen=true
 type UsbHostDevice struct {
 	USBBusDevSelector        string `json:"usbBusDevSelector"`
+	ResourceName             string `json:"resourceName"`
+	ExternalResourceProvider bool   `json:"externalResourceProvider,omitempty"`
+}
+
+// DisplayHostDevice represents a host display device allowed for passthrough
+// +k8s:openapi-gen=true
+type DisplayHostDevice struct {
+	DisplayBusDevSelector    string `json:"displayBusDevSelector"`
 	ResourceName             string `json:"resourceName"`
 	ExternalResourceProvider bool   `json:"externalResourceProvider,omitempty"`
 }

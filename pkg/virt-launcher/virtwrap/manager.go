@@ -22,7 +22,7 @@ package virtwrap
 //go:generate mockgen -source $GOFILE -package=$GOPACKAGE -destination=generated_mock_$GOFILE
 
 /*
- ATTENTION: Rerun code generators when interface signatures are modified.
+  ATTENTION: Rerun code generators when interface signatures are modified.
 */
 
 import (
@@ -39,6 +39,7 @@ import (
 	"sync"
 	"time"
 
+	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/display"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/generic"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/gpu"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/usb"
@@ -825,6 +826,13 @@ func (l *LibvirtDomainManager) generateConverterContext(vmi *v1.VirtualMachineIn
 		}
 		logger.V(4).Infof("=================== usb.CreateHostDevices: %v", usbHostDevices)
 		c.USBHostDevices = usbHostDevices
+
+		displayDevices, err := display.CreateDisplayDevices(vmi.Spec.Domain.Devices.Displays)
+		if err != nil {
+			return nil, err
+		}
+		// logger.V(4).Infof("=================== display.CreateHostDevices: %v", displayHostDevices)
+		c.DisplayDevices = displayDevices
 	}
 
 	return c, nil

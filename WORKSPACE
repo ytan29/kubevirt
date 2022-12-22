@@ -1687,9 +1687,9 @@ rpm(
 )
 
 rpm(
-    name = "kernel-headers-0__5.14.0-197.el9.x86_64",
-    sha256 = "212c5afadb16c97013126b9da014597ad1885ef55fa7cb4eaa64aca5f049bb6a",
-    urls = ["http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/kernel-headers-5.14.0-197.el9.x86_64.rpm"],
+    name = "kernel-headers-0__5.14.0-202.el9.x86_64",
+    sha256 = "764d1bb948e55d7d9f7c09b53355fd7a80d26b33a58a562450289a98490f42e3",
+    urls = ["http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/kernel-headers-5.14.0-202.el9.x86_64.rpm"],
 )
 
 rpm(
