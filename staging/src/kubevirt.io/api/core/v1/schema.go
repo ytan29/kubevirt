@@ -549,9 +549,8 @@ type USB struct {
 	// Name of the USB device as exposed by a device plugin
 	Name       string `json:"name"`
 	DeviceName string `json:"deviceName"`
-	// If specified, the virtual network interface address and its tag will be provided to the guest via config drive
-	// +optional
-	Tag string `json:"tag,omitempty"`
+	// If specified, the bus-dev will be assigned instead
+	BusDev string `json:"busDev,omitempty"`
 }
 
 type VGPUOptions struct {

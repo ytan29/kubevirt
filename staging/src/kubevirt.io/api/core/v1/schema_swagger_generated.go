@@ -299,9 +299,9 @@ func (GPU) SwaggerDoc() map[string]string {
 
 func (USB) SwaggerDoc() map[string]string {
 	return map[string]string{
-		"":     "+k8s:openapi-gen=true",
-		"name": "Name of the USB device as exposed by a device plugin",
-		"tag":  "If specified, the virtual network interface address and its tag will be provided to the guest via config drive\n+optional",
+		"":       "+k8s:openapi-gen=true",
+		"name":   "Name of the USB device as exposed by a device plugin",
+		"busDev": "If specified, the bus-dev will be assigned instead",
 	}
 }
 

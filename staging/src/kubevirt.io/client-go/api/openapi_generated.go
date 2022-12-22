@@ -20154,9 +20154,9 @@ func schema_kubevirtio_api_core_v1_USB(ref common.ReferenceCallback) common.Open
 							Format: "",
 						},
 					},
-					"tag": {
+					"busDev": {
 						SchemaProps: spec.SchemaProps{
-							Description: "If specified, the virtual network interface address and its tag will be provided to the guest via config drive",
+							Description: "If specified, the bus-dev will be assigned instead",
 							Type:        []string{"string"},
 							Format:      "",
 						},

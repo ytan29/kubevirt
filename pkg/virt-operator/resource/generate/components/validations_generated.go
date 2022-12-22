@@ -5367,16 +5367,15 @@ var CRDsValidation map[string]string = map[string]string{
                           description: Whether to attach a USB device to the vmi.
                           items:
                             properties:
+                              busDev:
+                                description: If specified, the bus-dev will be assigned
+                                  instead
+                                type: string
                               deviceName:
                                 type: string
                               name:
                                 description: Name of the USB device as exposed by
                                   a device plugin
-                                type: string
-                              tag:
-                                description: If specified, the virtual network interface
-                                  address and its tag will be provided to the guest
-                                  via config drive
                                 type: string
                             required:
                             - deviceName
@@ -9559,15 +9558,14 @@ var CRDsValidation map[string]string = map[string]string{
                   description: Whether to attach a USB device to the vmi.
                   items:
                     properties:
+                      busDev:
+                        description: If specified, the bus-dev will be assigned instead
+                        type: string
                       deviceName:
                         type: string
                       name:
                         description: Name of the USB device as exposed by a device
                           plugin
-                        type: string
-                      tag:
-                        description: If specified, the virtual network interface address
-                          and its tag will be provided to the guest via config drive
                         type: string
                     required:
                     - deviceName
@@ -11929,15 +11927,14 @@ var CRDsValidation map[string]string = map[string]string{
                   description: Whether to attach a USB device to the vmi.
                   items:
                     properties:
+                      busDev:
+                        description: If specified, the bus-dev will be assigned instead
+                        type: string
                       deviceName:
                         type: string
                       name:
                         description: Name of the USB device as exposed by a device
                           plugin
-                        type: string
-                      tag:
-                        description: If specified, the virtual network interface address
-                          and its tag will be provided to the guest via config drive
                         type: string
                     required:
                     - deviceName
@@ -14047,16 +14044,15 @@ var CRDsValidation map[string]string = map[string]string{
                           description: Whether to attach a USB device to the vmi.
                           items:
                             properties:
+                              busDev:
+                                description: If specified, the bus-dev will be assigned
+                                  instead
+                                type: string
                               deviceName:
                                 type: string
                               name:
                                 description: Name of the USB device as exposed by
                                   a device plugin
-                                type: string
-                              tag:
-                                description: If specified, the virtual network interface
-                                  address and its tag will be provided to the guest
-                                  via config drive
                                 type: string
                             required:
                             - deviceName
@@ -18040,16 +18036,15 @@ var CRDsValidation map[string]string = map[string]string{
                                     vmi.
                                   items:
                                     properties:
+                                      busDev:
+                                        description: If specified, the bus-dev will
+                                          be assigned instead
+                                        type: string
                                       deviceName:
                                         type: string
                                       name:
                                         description: Name of the USB device as exposed
                                           by a device plugin
-                                        type: string
-                                      tag:
-                                        description: If specified, the virtual network
-                                          interface address and its tag will be provided
-                                          to the guest via config drive
                                         type: string
                                     required:
                                     - deviceName
@@ -22751,17 +22746,15 @@ var CRDsValidation map[string]string = map[string]string{
                                         to the vmi.
                                       items:
                                         properties:
+                                          busDev:
+                                            description: If specified, the bus-dev
+                                              will be assigned instead
+                                            type: string
                                           deviceName:
                                             type: string
                                           name:
                                             description: Name of the USB device as
                                               exposed by a device plugin
-                                            type: string
-                                          tag:
-                                            description: If specified, the virtual
-                                              network interface address and its tag
-                                              will be provided to the guest via config
-                                              drive
                                             type: string
                                         required:
                                         - deviceName

@@ -63,6 +63,7 @@ func createHostDevicesMetadata(vmiUSBs []v1.USB) []hostdevice.HostDeviceMetaData
 			AliasPrefix:  AliasPrefix,
 			Name:         dev.Name,
 			ResourceName: dev.DeviceName,
+			BusDev:       dev.BusDev,
 		})
 	}
 	// sample
