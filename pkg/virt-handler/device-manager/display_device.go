@@ -45,14 +45,12 @@ import (
 
 const (
 	displayDevicePath = "/sys/devices/pci0000:00/"
-	displayBasePath   = "/sys/devices/pci0000:00/"
 )
 
 type DisplayDevice struct {
-	VendorID    string
-	ProductID   string
+	DisplayID   string
 	BusNum      string
-	DevNum      string
+	DisplayNum  string
 	FullDevPath string
 }
 
@@ -94,7 +92,7 @@ func NewDisplayDevicePlugin(devices []*DisplayDevice, resourceName string) *Disp
 func constructDPIdevicesFromDisplay(devices []*DisplayDevice) (devs []*pluginapi.Device) {
 	for _, device := range devices {
 		dpiDev := &pluginapi.Device{
-			ID:     device.BusNum + "." + device.DevNum,
+			ID:     device.DisplayID + "." + device.BusNum + "." + device.DisplayNum,
 			Health: pluginapi.Healthy,
 		}
 		devs = append(devs, dpiDev)
@@ -250,15 +248,16 @@ func (dpi *DisplayDevicePlugin) healthCheck() error {
 
 	// probe all devices
 	for _, dev := range dpi.devs {
-		device := devicePath + "0000:00:" + dev.ID
+		addarr := strings.Split(dev.ID, ".")
+		device := devicePath + "0000:00:" + addarr[1] + "." + addarr[2]
 		err = watcher.Add(device)
 		logger.Infof("watching %s", device)
 		if err != nil {
-			return fmt.Errorf("failed to add the device %s to the watcher: %v", device, err)
+			return fmt.Errorf("failed to add the device %s to the watcher: %v", dev.ID, err)
 		}
 		monitoredDevices[device] = dev.ID
 	}
-	logger.Infof("device '%s' is present.", dpi.devicePath)
+	// logger.Infof("device '%s' is present.", dpi.devicePath)
 
 	dirName = filepath.Dir(dpi.socketPath)
 	err = watcher.Add(dirName)
@@ -279,6 +278,7 @@ func (dpi *DisplayDevicePlugin) healthCheck() error {
 			logger.Reason(err).Errorf("error watching devices and device plugin directory")
 		case event := <-watcher.Events:
 			logger.V(4).Infof("health Event: %v", event)
+			dpi.health <- deviceHealth{Health: pluginapi.Healthy}
 
 			if event.Name == devicePath {
 				// Health in this case is if the device path actually exists
@@ -373,13 +373,14 @@ func discoverPermittedHostDisplayDevices(supportedDeviceMap map[string]string) m
 	initHandler()
 
 	devicesMap := make(map[string][]*DisplayDevice)
-
+	// addr : :1.02.1
 	for addr, resourceName := range supportedDeviceMap {
 		addarr := strings.Split(addr, ".")
 
 		dev := &DisplayDevice{
-			BusNum: addarr[0],
-			DevNum: addarr[1],
+			DisplayID:  addarr[0],
+			BusNum:     addarr[1],
+			DisplayNum: addarr[2],
 		}
 
 		// Confirm the path is valid and thus device is available
@@ -390,8 +391,8 @@ func discoverPermittedHostDisplayDevices(supportedDeviceMap map[string]string) m
 		// 	return nil
 		// }
 
-		dev.FullDevPath = filepath.Join(displayDevicePath, dev.BusNum, dev.DevNum)
-		log.DefaultLogger().V(4).Infof("Found display device at %s", dev.FullDevPath)
+		//dev.FullDevPath = filepath.Join(displayDevicePath, dev.BusNum, dev.DevNum)
+		//log.DefaultLogger().V(4).Infof("Found display device at %s", dev.FullDevPath)
 
 		devicesMap[resourceName] = append(devicesMap[resourceName], dev)
 	}

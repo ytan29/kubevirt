@@ -21,6 +21,7 @@ package hostdevice
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"kubevirt.io/client-go/log"
@@ -51,10 +52,10 @@ func (p *AddressPool) load(resourcePrefix string, resources []string) {
 
 		// flagXY : no changes
 		// HACK to bypass ENV check:
-		// addressString, isSet := os.LookupEnv(addressEnvVarName)
-		log.Log.Warningf("===== looking for %s ENV", addressEnvVarName)
-		addressString := "/dev/bus/usb/001/003"
-		isSet := true
+		addressString, isSet := os.LookupEnv(addressEnvVarName)
+		// log.Log.Warningf("===== looking for %s ENV", addressEnvVarName)
+		// addressString := "/dev/bus/usb/001/003"
+		// isSet := true
 		if !isSet {
 			log.Log.Warningf("%s not set for resource %s", addressEnvVarName, resource)
 			continue

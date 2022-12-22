@@ -63,10 +63,6 @@ func CreateUSBHostDevices(hostDevicesData []HostDeviceMetaData, usbAddrPool Addr
 	return createHostDevices(hostDevicesData, usbAddrPool, createUSBHostDevice)
 }
 
-func CreateDisplayHostDevices(hostDevicesData []HostDeviceMetaData, DisplayAddrPool AddressPooler) ([]api.HostDevice, error) {
-	return createHostDevices(hostDevicesData, DisplayAddrPool, createDisplayHostDevice)
-}
-
 func createHostDevices(hostDevicesData []HostDeviceMetaData, addrPool AddressPooler, createHostDev createHostDevice) ([]api.HostDevice, error) {
 	var hostDevices []api.HostDevice
 
@@ -180,20 +176,20 @@ func createUSBHostDevice(hostDeviceData HostDeviceMetaData, busdevNum string) (*
 }
 
 // flagXY
-func createDisplayHostDevice(hostDeviceData HostDeviceMetaData, busdevNum string) (*api.HostDevice, error) {
-	split := strings.Split(busdevNum, ".")
-	// busdevNum = addrPool.Pop(hostDeviceData.ResourceName) = [hostDeviceData.ResourceName].value
-	domainHostDevice := &api.HostDevice{
-		Alias: api.NewUserDefinedAlias(hostDeviceData.AliasPrefix + hostDeviceData.Name),
-		Source: api.HostDeviceSource{
-			Address: &api.Address{
-				Bus:    split[0],
-				Device: split[1],
-			},
-		},
-		Type:    "display",
-		Mode:    "subsystem",
-		Managed: "yes",
-	}
-	return domainHostDevice, nil
-}
+// func createDisplayHostDevice(hostDeviceData HostDeviceMetaData, busdevNum string) (*api.HostDevice, error) {
+// 	split := strings.Split(busdevNum, ".")
+// 	// busdevNum = addrPool.Pop(hostDeviceData.ResourceName) = [hostDeviceData.ResourceName].value
+// 	domainHostDevice := &api.HostDevice{
+// 		Alias: api.NewUserDefinedAlias(hostDeviceData.AliasPrefix + hostDeviceData.Name),
+// 		Source: api.HostDeviceSource{
+// 			Address: &api.Address{
+// 				Bus:    split[0],
+// 				Device: split[1],
+// 			},
+// 		},
+// 		Type:    "display",
+// 		Mode:    "subsystem",
+// 		Managed: "yes",
+// 	}
+// 	return domainHostDevice, nil
+// }
