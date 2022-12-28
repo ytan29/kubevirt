@@ -1290,6 +1290,7 @@ func (t *templateService) VMIResourcePredicates(vmi *v1.VirtualMachineInstance, 
 				return len(networkToResourceMap) > 0
 			}, WithNetworkResources(networkToResourceMap)),
 			NewVMIResourceRule(util.IsGPUVMI, WithGPUs(vmi.Spec.Domain.Devices.GPUs)),
+			NewVMIResourceRule(util.IsUSBVMI, WithUSBs(vmi.Spec.Domain.Devices.USBs)),
 			NewVMIResourceRule(util.IsHostDevVMI, WithHostDevices(vmi.Spec.Domain.Devices.HostDevices)),
 			NewVMIResourceRule(util.IsSEVVMI, WithSEV()),
 		},

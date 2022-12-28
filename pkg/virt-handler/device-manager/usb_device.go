@@ -198,7 +198,7 @@ func (dpi *USBDevicePlugin) Allocate(_ context.Context, r *pluginapi.AllocateReq
 		deviceSpecs := make([]*pluginapi.DeviceSpec, 0)
 		for _, devID := range request.DevicesIDs {
 			log.DefaultLogger().Infof("Allocate: devID: %s", devID)
-			allocatedDevices = append(allocatedDevices, dpi.resourceName)
+			allocatedDevices = append(allocatedDevices, dpi.devicePath+"/"+devID)
 
 			formattedUSB := formatUSBDeviceSpecs(devID)
 			log.DefaultLogger().Infof("Allocate: formatted usb: %v", formattedUSB)
@@ -276,21 +276,6 @@ func (dpi *USBDevicePlugin) healthCheck() error {
 			logger.Reason(err).Errorf("error watching devices and device plugin directory")
 		case event := <-watcher.Events:
 			logger.V(4).Infof("health Event: %v", event)
-			// if monDevId, exist := monitoredDevices[event.Name]; exist {
-			// 	// Health in this case is if the device path actually exists
-			// 	if event.Op == fsnotify.Create {
-			// 		logger.Infof("monitored device %s appeared", dpi.resourceName)
-			// 		dpi.health <- deviceHealth{
-			// 			DevId:  monDevId,
-			// 			Health: pluginapi.Healthy,
-			// 		}
-			// 	} else if (event.Op == fsnotify.Remove) || (event.Op == fsnotify.Rename) {
-			// 		logger.Infof("monitored device %s disappeared", dpi.resourceName)
-			// 		dpi.health <- deviceHealth{
-			// 			DevId:  monDevId,
-			// 			Health: pluginapi.Unhealthy,
-			// 		}
-			// 	}
 			if event.Name == devicePath {
 				// Health in this case is if the device path actually exists
 				if event.Op == fsnotify.Create {
@@ -303,8 +288,6 @@ func (dpi *USBDevicePlugin) healthCheck() error {
 			} else if event.Name == dpi.socketPath && event.Op == fsnotify.Remove {
 				logger.Infof("device socket file for device %s was removed, kubelet probably restarted.", dpi.resourceName)
 				return nil
-			} else {
-				logger.Infof("something else....")
 			}
 		}
 	}

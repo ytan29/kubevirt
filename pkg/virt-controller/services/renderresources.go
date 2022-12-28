@@ -234,6 +234,17 @@ func WithGPUs(gpus []v1.GPU) ResourceRendererOption {
 	}
 }
 
+func WithUSBs(usbs []v1.USB) ResourceRendererOption {
+	return func(renderer *ResourceRenderer) {
+		resources := renderer.ResourceRequirements()
+		for _, usb := range usbs {
+			requestResource(&resources, usb.DeviceName)
+		}
+		copyResources(resources.Limits, renderer.calculatedLimits)
+		copyResources(resources.Requests, renderer.calculatedRequests)
+	}
+}
+
 func WithHostDevices(hostDevices []v1.HostDevice) ResourceRendererOption {
 	return func(renderer *ResourceRenderer) {
 		resources := renderer.ResourceRequirements()
@@ -470,6 +481,9 @@ func validatePermittedHostDevices(spec *v1.VirtualMachineInstanceSpec, config *v
 		for _, dev := range hostDevs.MediatedDevices {
 			supportedHostDevicesMap[dev.ResourceName] = true
 		}
+		for _, dev := range hostDevs.UsbDevices {
+			supportedHostDevicesMap[dev.ResourceName] = true
+		}
 		for _, hostDev := range spec.Domain.Devices.GPUs {
 			if _, exist := supportedHostDevicesMap[hostDev.DeviceName]; !exist {
 				errors = append(errors, fmt.Sprintf("GPU %s is not permitted in permittedHostDevices configuration", hostDev.DeviceName))
@@ -478,6 +492,11 @@ func validatePermittedHostDevices(spec *v1.VirtualMachineInstanceSpec, config *v
 		for _, hostDev := range spec.Domain.Devices.HostDevices {
 			if _, exist := supportedHostDevicesMap[hostDev.DeviceName]; !exist {
 				errors = append(errors, fmt.Sprintf("HostDevice %s is not permitted in permittedHostDevices configuration", hostDev.DeviceName))
+			}
+		}
+		for _, hostDev := range spec.Domain.Devices.USBs {
+			if _, exist := supportedHostDevicesMap[hostDev.DeviceName]; !exist {
+				errors = append(errors, fmt.Sprintf("USB %s is not permitted in permittedHostDevices configuration", hostDev.DeviceName))
 			}
 		}
 	}
