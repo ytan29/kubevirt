@@ -33,7 +33,6 @@ func NewUSBAddressPool(usbDevices []v1.USB) *hostdevice.AddressPool {
 }
 
 func extractResources(usbDevices []v1.USB) []string {
-	log.Log.Warningf("===== extractResources")
 	var resourceSet = make(map[string]struct{})
 	for _, usbDevice := range usbDevices {
 		log.Log.Warningf("===== usbDevice.DeviceName %s", usbDevice.DeviceName)

@@ -68,24 +68,12 @@ func createHostDevices(hostDevicesData []HostDeviceMetaData, addrPool AddressPoo
 	var hostDevices []api.HostDevice
 
 	log.Log.Infof("==========   hostDevicesData: %v", hostDevicesData)
-	// sample
-	// AliasPrefix:  usb-
-	// Name:         usbdev
-	// ResourceName: generic/hid-mouse
 	for _, hostDeviceData := range hostDevicesData {
 		address, err := addrPool.Pop(hostDeviceData.ResourceName)
 		if err != nil {
 			return nil, fmt.Errorf(failedCreateHostDeviceFmt, hostDeviceData.Name, err)
 		}
 		log.Log.Infof("==========   address: %s", address)
-
-		if hostDeviceData.Name == "usbdev" {
-			// address is hardcoded to "/dev/bus/usb/001/003"
-			// thus, update to the correct values following Kustomize yaml input available in hostDeviceData
-			split := strings.Split(hostDeviceData.BusDev, "/")
-			address = split[0] + "-" + split[1]
-			log.Log.Infof("==========  using usb address from Kustomize yaml: %s", address)
-		}
 
 		// if pop succeeded but the address is empty, ignore the device and let the caller
 		// decide if this is acceptable or not.
@@ -160,10 +148,8 @@ func createMDEVHostDevice(hostDeviceData HostDeviceMetaData, mdevUUID string) (*
 	return domainHostDevice, nil
 }
 
-func createUSBHostDevice(hostDeviceData HostDeviceMetaData, busdevNum string) (*api.HostDevice, error) {
-	split := strings.Split(busdevNum, "-")
-
-	// busdevNum = addrPool.Pop(hostDeviceData.ResourceName) = [hostDeviceData.ResourceName].value
+func createUSBHostDevice(hostDeviceData HostDeviceMetaData, usbDevPath string) (*api.HostDevice, error) {
+	split := strings.Split(hostDeviceData.BusDev, "/")
 	domainHostDevice := &api.HostDevice{
 		Alias: api.NewUserDefinedAlias(hostDeviceData.AliasPrefix + hostDeviceData.Name),
 		Source: api.HostDeviceSource{
