@@ -245,6 +245,17 @@ func WithUSBs(usbs []v1.USB) ResourceRendererOption {
 	}
 }
 
+func WithDisplays(displays []v1.Display) ResourceRendererOption {
+	return func(renderer *ResourceRenderer) {
+		resources := renderer.ResourceRequirements()
+		for _, dev := range displays {
+			requestResource(&resources, dev.DeviceName)
+		}
+		copyResources(resources.Limits, renderer.calculatedLimits)
+		copyResources(resources.Requests, renderer.calculatedRequests)
+	}
+}
+
 func WithHostDevices(hostDevices []v1.HostDevice) ResourceRendererOption {
 	return func(renderer *ResourceRenderer) {
 		resources := renderer.ResourceRequirements()
@@ -482,6 +493,10 @@ func validatePermittedHostDevices(spec *v1.VirtualMachineInstanceSpec, config *v
 			supportedHostDevicesMap[dev.ResourceName] = true
 		}
 		for _, dev := range hostDevs.UsbDevices {
+			supportedHostDevicesMap[dev.ResourceName] = true
+		}
+		// flagXY
+		for _, dev := range hostDevs.DisplayDevices {
 			supportedHostDevicesMap[dev.ResourceName] = true
 		}
 		for _, hostDev := range spec.Domain.Devices.GPUs {

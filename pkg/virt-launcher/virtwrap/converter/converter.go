@@ -106,6 +106,7 @@ type ConverterContext struct {
 	GenericHostDevices    []api.HostDevice
 	GPUHostDevices        []api.HostDevice
 	USBHostDevices        []api.HostDevice
+	DisplayDevices        api.Commandline
 	EFIConfiguration      *EFIConfiguration
 	MemBalloonStatsPeriod uint
 	UseVirtioTransitional bool
@@ -1152,6 +1153,10 @@ func initializeQEMUCmdAndQEMUArg(domain *api.Domain) {
 	if domain.Spec.QEMUCmd.QEMUArg == nil {
 		domain.Spec.QEMUCmd.QEMUArg = make([]api.Arg, 0)
 	}
+
+	if domain.Spec.QEMUCmd.QEMUEnv == nil {
+		domain.Spec.QEMUCmd.QEMUEnv = make([]api.Env, 0)
+	}
 }
 
 func isUSBNeeded(c *ConverterContext, vmi *v1.VirtualMachineInstance) bool {
@@ -1795,6 +1800,26 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 	domain.Spec.Devices.Interfaces = append(domain.Spec.Devices.Interfaces, domainInterfaces...)
 	domain.Spec.Devices.HostDevices = append(domain.Spec.Devices.HostDevices, c.SRIOVDevices...)
 	domain.Spec.Devices.HostDevices = append(domain.Spec.Devices.HostDevices, c.USBHostDevices...)
+	// flagXY
+	if len(c.DisplayDevices.QEMUArg) > 0 {
+		initializeQEMUCmdAndQEMUArg(domain)
+		memory := fmt.Sprintf("%d%s", domain.Spec.Memory.Value, domain.Spec.Memory.Unit)
+
+		domain.Spec.QEMUCmd.QEMUArg = append(domain.Spec.QEMUCmd.QEMUArg,
+			api.Arg{Value: "-device"},
+			api.Arg{Value: "virtio-vga,max_outputs=1,blob=on"},
+			api.Arg{Value: "-machine"},
+			api.Arg{Value: "memory-backend=mem"},
+			api.Arg{Value: "-object"},
+			api.Arg{Value: "memory-backend-memfd,id=mem,size=" + memory},
+			api.Arg{Value: "-cpu"},
+			api.Arg{Value: "host"})
+		domain.Spec.QEMUCmd.QEMUArg = append(domain.Spec.QEMUCmd.QEMUArg, c.DisplayDevices.QEMUArg...)
+		domain.Spec.QEMUCmd.QEMUEnv = append(domain.Spec.QEMUCmd.QEMUEnv, c.DisplayDevices.QEMUEnv...)
+
+		log.Log.Infof("%v", domain.Spec.QEMUCmd.QEMUArg)
+
+	}
 
 	// Add Ignition Command Line if present
 	ignitiondata, _ := vmi.Annotations[v1.IgnitionAnnotation]

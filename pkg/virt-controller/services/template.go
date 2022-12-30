@@ -665,6 +665,11 @@ func (t *templateService) newVolumeRenderer(vmi *v1.VirtualMachineInstance, name
 	// arif hack here to always enable USB
 	volumeOpts = append(volumeOpts, withUSBMapAnnotation())
 
+	// flagXY
+	if util.IsDisplayEnabled(vmi) {
+		volumeOpts = append(volumeOpts, withDisplayMapAnnotation())
+	}
+
 	if util.IsVMIVirtiofsEnabled(vmi) {
 		volumeOpts = append(volumeOpts, withVirioFS())
 	}
@@ -1291,6 +1296,8 @@ func (t *templateService) VMIResourcePredicates(vmi *v1.VirtualMachineInstance, 
 			}, WithNetworkResources(networkToResourceMap)),
 			NewVMIResourceRule(util.IsGPUVMI, WithGPUs(vmi.Spec.Domain.Devices.GPUs)),
 			NewVMIResourceRule(util.IsUSBVMI, WithUSBs(vmi.Spec.Domain.Devices.USBs)),
+			// flagXY
+			NewVMIResourceRule(util.IsDisplayEnabled, WithDisplays(vmi.Spec.Domain.Devices.Displays)),
 			NewVMIResourceRule(util.IsHostDevVMI, WithHostDevices(vmi.Spec.Domain.Devices.HostDevices)),
 			NewVMIResourceRule(util.IsSEVVMI, WithSEV()),
 		},

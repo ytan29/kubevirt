@@ -449,6 +449,23 @@ spec:
                     description: PermittedHostDevices holds information about devices
                       allowed for passthrough
                     properties:
+                      displayDevices:
+                        items:
+                          description: DisplayHostDevice represents a host display
+                            device allowed for passthrough
+                          properties:
+                            displayBusDevSelector:
+                              type: string
+                            externalResourceProvider:
+                              type: boolean
+                            resourceName:
+                              type: string
+                          required:
+                          - displayBusDevSelector
+                          - resourceName
+                          type: object
+                        type: array
+                        x-kubernetes-list-type: atomic
                       mediatedDevices:
                         items:
                           description: MediatedHostDevice represents a host mediated
@@ -3185,6 +3202,23 @@ spec:
                     description: PermittedHostDevices holds information about devices
                       allowed for passthrough
                     properties:
+                      displayDevices:
+                        items:
+                          description: DisplayHostDevice represents a host display
+                            device allowed for passthrough
+                          properties:
+                            displayBusDevSelector:
+                              type: string
+                            externalResourceProvider:
+                              type: boolean
+                            resourceName:
+                              type: string
+                          required:
+                          - displayBusDevSelector
+                          - resourceName
+                          type: object
+                        type: array
+                        x-kubernetes-list-type: atomic
                       mediatedDevices:
                         items:
                           description: MediatedHostDevice represents a host mediated

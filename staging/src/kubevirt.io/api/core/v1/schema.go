@@ -453,6 +453,10 @@ type Devices struct {
 	// +optional
 	// +listType=atomic
 	USBs []USB `json:"usbs,omitempty"`
+	//Whether to attach a Display device to the vmi.
+	// +optional
+	// +listType=atomic
+	Displays []Display `json:"displays,omitempty"`
 	// Filesystems describes filesystem which is connected to the vmi.
 	// +optional
 	// +listType=atomic
@@ -555,6 +559,15 @@ type USB struct {
 
 type VGPUOptions struct {
 	Display *VGPUDisplayOptions `json:"display,omitempty"`
+}
+
+// +k8s:openapi-gen=true
+type Display struct {
+	// Name of the Display device as exposed by a device plugin
+	Name       string `json:"name"`
+	DeviceName string `json:"deviceName"`
+	// If specified, the bus-dev will be assigned instead
+	Monitor string `json:"monitor,omitempty"`
 }
 
 type VGPUDisplayOptions struct {

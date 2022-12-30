@@ -749,6 +749,7 @@ func (PermittedHostDevices) SwaggerDoc() map[string]string {
 		"pciHostDevices":  "+listType=atomic",
 		"mediatedDevices": "+listType=atomic",
 		"usbDevices":      "+listType=atomic",
+		"displayDevices":  "+listType=atomic",
 	}
 }
 
@@ -764,6 +765,12 @@ func (PciHostDevice) SwaggerDoc() map[string]string {
 func (UsbHostDevice) SwaggerDoc() map[string]string {
 	return map[string]string{
 		"": "UsbHostDevice represents a host usb device allowed for passthrough\n+k8s:openapi-gen=true",
+	}
+}
+
+func (DisplayHostDevice) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"": "DisplayHostDevice represents a host display device allowed for passthrough\n+k8s:openapi-gen=true",
 	}
 }
 

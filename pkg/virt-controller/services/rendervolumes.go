@@ -407,6 +407,32 @@ func withUSBMapAnnotation() VolumeRendererOption {
 	}
 }
 
+// flagXY
+func withDisplayMapAnnotation() VolumeRendererOption {
+	return func(renderer *VolumeRenderer) error {
+		basePath := "/sys/devices/pci0000:00"
+		var hostPathType k8sv1.HostPathType
+		hostPathType = k8sv1.HostPathDirectory
+
+		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
+			Name:      "display",
+			MountPath: basePath,
+		})
+
+		renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{
+			Name: "display",
+			VolumeSource: k8sv1.VolumeSource{
+				HostPath: &k8sv1.HostPathVolumeSource{
+					Path: basePath,
+					Type: &hostPathType,
+				},
+			},
+		})
+
+		return nil
+	}
+}
+
 func imgPullSecrets(volumes ...v1.Volume) []k8sv1.LocalObjectReference {
 	var imagePullSecrets []k8sv1.LocalObjectReference
 	for _, volume := range volumes {

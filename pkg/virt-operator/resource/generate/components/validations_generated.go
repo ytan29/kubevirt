@@ -924,6 +924,23 @@ var CRDsValidation map[string]string = map[string]string{
               description: PermittedHostDevices holds information about devices allowed
                 for passthrough
               properties:
+                displayDevices:
+                  items:
+                    description: DisplayHostDevice represents a host display device
+                      allowed for passthrough
+                    properties:
+                      displayBusDevSelector:
+                        type: string
+                      externalResourceProvider:
+                        type: boolean
+                      resourceName:
+                        type: string
+                    required:
+                    - displayBusDevSelector
+                    - resourceName
+                    type: object
+                  type: array
+                  x-kubernetes-list-type: atomic
                 mediatedDevices:
                   items:
                     description: MediatedHostDevice represents a host mediated device
@@ -5102,6 +5119,26 @@ var CRDsValidation map[string]string = map[string]string{
                             - name
                             type: object
                           type: array
+                        displays:
+                          description: Whether to attach a Display device to the vmi.
+                          items:
+                            properties:
+                              deviceName:
+                                type: string
+                              monitor:
+                                description: If specified, the bus-dev will be assigned
+                                  instead
+                                type: string
+                              name:
+                                description: Name of the Display device as exposed
+                                  by a device plugin
+                                type: string
+                            required:
+                            - deviceName
+                            - name
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: atomic
                         filesystems:
                           description: Filesystems describes filesystem which is connected
                             to the vmi.
@@ -9302,6 +9339,25 @@ var CRDsValidation map[string]string = map[string]string{
                     - name
                     type: object
                   type: array
+                displays:
+                  description: Whether to attach a Display device to the vmi.
+                  items:
+                    properties:
+                      deviceName:
+                        type: string
+                      monitor:
+                        description: If specified, the bus-dev will be assigned instead
+                        type: string
+                      name:
+                        description: Name of the Display device as exposed by a device
+                          plugin
+                        type: string
+                    required:
+                    - deviceName
+                    - name
+                    type: object
+                  type: array
+                  x-kubernetes-list-type: atomic
                 filesystems:
                   description: Filesystems describes filesystem which is connected
                     to the vmi.
@@ -11671,6 +11727,25 @@ var CRDsValidation map[string]string = map[string]string{
                     - name
                     type: object
                   type: array
+                displays:
+                  description: Whether to attach a Display device to the vmi.
+                  items:
+                    properties:
+                      deviceName:
+                        type: string
+                      monitor:
+                        description: If specified, the bus-dev will be assigned instead
+                        type: string
+                      name:
+                        description: Name of the Display device as exposed by a device
+                          plugin
+                        type: string
+                    required:
+                    - deviceName
+                    - name
+                    type: object
+                  type: array
+                  x-kubernetes-list-type: atomic
                 filesystems:
                   description: Filesystems describes filesystem which is connected
                     to the vmi.
@@ -13779,6 +13854,26 @@ var CRDsValidation map[string]string = map[string]string{
                             - name
                             type: object
                           type: array
+                        displays:
+                          description: Whether to attach a Display device to the vmi.
+                          items:
+                            properties:
+                              deviceName:
+                                type: string
+                              monitor:
+                                description: If specified, the bus-dev will be assigned
+                                  instead
+                                type: string
+                              name:
+                                description: Name of the Display device as exposed
+                                  by a device plugin
+                                type: string
+                            required:
+                            - deviceName
+                            - name
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: atomic
                         filesystems:
                           description: Filesystems describes filesystem which is connected
                             to the vmi.
@@ -17750,6 +17845,27 @@ var CRDsValidation map[string]string = map[string]string{
                                     - name
                                     type: object
                                   type: array
+                                displays:
+                                  description: Whether to attach a Display device
+                                    to the vmi.
+                                  items:
+                                    properties:
+                                      deviceName:
+                                        type: string
+                                      monitor:
+                                        description: If specified, the bus-dev will
+                                          be assigned instead
+                                        type: string
+                                      name:
+                                        description: Name of the Display device as
+                                          exposed by a device plugin
+                                        type: string
+                                    required:
+                                    - deviceName
+                                    - name
+                                    type: object
+                                  type: array
+                                  x-kubernetes-list-type: atomic
                                 filesystems:
                                   description: Filesystems describes filesystem which
                                     is connected to the vmi.
@@ -22450,6 +22566,27 @@ var CRDsValidation map[string]string = map[string]string{
                                         - name
                                         type: object
                                       type: array
+                                    displays:
+                                      description: Whether to attach a Display device
+                                        to the vmi.
+                                      items:
+                                        properties:
+                                          deviceName:
+                                            type: string
+                                          monitor:
+                                            description: If specified, the bus-dev
+                                              will be assigned instead
+                                            type: string
+                                          name:
+                                            description: Name of the Display device
+                                              as exposed by a device plugin
+                                            type: string
+                                        required:
+                                        - deviceName
+                                        - name
+                                        type: object
+                                      type: array
+                                      x-kubernetes-list-type: atomic
                                     filesystems:
                                       description: Filesystems describes filesystem
                                         which is connected to the vmi.

@@ -172,8 +172,6 @@ func (c *DeviceController) NodeHasDevice(devicePath string) bool {
 func (c *DeviceController) updatePermittedHostDevicePlugins() []Device {
 	var permittedDevices []Device
 
-	log.Log.V(4).Infof("=============== Entering updatePermittedHostDevicePlugins")
-
 	var featureGatedDevices = []struct {
 		Name      string
 		Path      string
@@ -194,6 +192,27 @@ func (c *DeviceController) updatePermittedHostDevicePlugins() []Device {
 	hostDevs := c.virtConfig.GetPermittedHostDevices()
 	if hostDevs == nil {
 		return permittedDevices
+	}
+
+	// flagXY
+	if len(hostDevs.DisplayDevices) != 0 {
+		supportedDisplayDeviceMap := make(map[string]string)
+		for _, dev := range hostDevs.DisplayDevices {
+			log.Log.V(4).Infof("Permitted Display device in the cluster, ID: %s, resourceName: %s, externalProvider: %t",
+				strings.ToLower(dev.DisplayBusDevSelector),
+				dev.ResourceName,
+				dev.ExternalResourceProvider)
+			// do not add a device plugin for this resource if it's being provided via an external device plugin
+			if !dev.ExternalResourceProvider {
+				supportedDisplayDeviceMap[strings.ToLower(dev.DisplayBusDevSelector)] = dev.ResourceName
+			}
+		}
+
+		for resourceName, devices := range discoverPermittedHostDisplayDevices(supportedDisplayDeviceMap) {
+			log.Log.V(4).Infof("Discovered Display %d devices on the node for the resource: %s", len(devices), resourceName)
+			// add a device plugin only for new devices
+			permittedDevices = append(permittedDevices, NewDisplayDevicePlugin(devices, resourceName))
+		}
 	}
 
 	if len(hostDevs.UsbDevices) != 0 {

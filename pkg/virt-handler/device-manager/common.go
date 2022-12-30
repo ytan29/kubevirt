@@ -28,6 +28,7 @@ import (
 	"net"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -274,6 +275,25 @@ func formatUSBDeviceSpecs(devID string) []*v1beta1.DeviceSpec {
 	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
 		HostPath:      usbDevPath,
 		ContainerPath: usbDevPath,
+		Permissions:   "mrw",
+	})
+	return devSpecs
+}
+
+// flagXY
+func formatDisplayDeviceSpecs(devID string) []*v1beta1.DeviceSpec {
+	devSpecs := make([]*v1beta1.DeviceSpec, 0)
+	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
+		HostPath:      displayDevicePath,
+		ContainerPath: displayDevicePath,
+		Permissions:   "mrw",
+	})
+	addarr := strings.Split(devID, ".")
+
+	displayDevPath := path.Join(displayDevicePath, "0000:00:"+addarr[1]+"."+addarr[2])
+	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
+		HostPath:      displayDevPath,
+		ContainerPath: displayDevPath,
 		Permissions:   "mrw",
 	})
 	return devSpecs
