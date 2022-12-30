@@ -6,15 +6,16 @@ source hack/common.sh
 source hack/bootstrap.sh
 source hack/config.sh
 
-LIBVIRT_VERSION=${LIBVIRT_VERSION:-0:8.7.0-1.el9}
-QEMU_VERSION=${QEMU_VERSION:-17:7.1.0-3.el9}
-SEABIOS_VERSION=${SEABIOS_VERSION:-0:1.16.0-4.el9}
-EDK2_VERSION=${EDK2_VERSION:-0:20220826gitba0e0e4c6a-1.el9}
-LIBGUESTFS_VERSION=${LIBGUESTFS_VERSION:-1:1.48.4-2.el9}
-GUESTFSTOOLS_VERSION=${GUESTFSTOOLS_VERSION:-0:1.48.2-7.el9}
-PASST_VERSION=${PASST_VERSION:-0:0^20221026.gf212044-1.el9}
-VIRTIOFSD_VERSION=${VIRTIOFSD_VERSION:-0:1.4.0-1.el9}
-SINGLE_ARCH=${SINGLE_ARCH:-""}
+LIBVIRT_VERSION="0:8.0.0-2.module_el8.6.0+1087+b42c8331"
+#QEMU_VERSION="15:6.2.0-5.module_el8.6.0+1087+b42c8331"
+QEMU_VERSION="15:6.2.0-5.el8"
+SEABIOS_VERSION="0:1.15.0-1.module_el8.6.0+1087+b42c8331"
+EDK2_VERSION="0:20220126gitbb1bba3d77-2.el8"
+LIBGUESTFS_VERSION="1:1.44.0-5.module_el8.6.0+1087+b42c8331"
+GUESTFSTOOLS_VERSION="0:1.48.2-7.el9"
+PASST_VERSION="0:0^20221026.gf212044-1.el9"
+VIRTIOFSD_VERSION="0:1.4.0-1.el9"
+SINGLE_ARCH="x86_64"
 
 bazeldnf_repos="--repofile rpm/repo.yaml"
 if [ "${CUSTOM_REPO}" ]; then
@@ -90,8 +91,6 @@ launcherbase_main="
 "
 launcherbase_x86_64="
   edk2-ovmf-${EDK2_VERSION}
-  qemu-kvm-device-usb-redirect-${QEMU_VERSION}
-  qemu-kvm-device-usb-host-${QEMU_VERSION}
   seabios-${SEABIOS_VERSION}
 "
 launcherbase_aarch64="
