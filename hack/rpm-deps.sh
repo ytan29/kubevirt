@@ -6,7 +6,7 @@ source hack/common.sh
 source hack/bootstrap.sh
 source hack/config.sh
 
-LIBVIRT_VERSION="0:8.0.0-2.module_el8.6.0+1087+b42c8331"
+LIBVIRT_VERSION="0:6.0.0-36.module_el8.5.0+821+97472045"
 #QEMU_VERSION="15:6.2.0-5.module_el8.6.0+1087+b42c8331"
 QEMU_VERSION="15:6.2.0-5.el8"
 SEABIOS_VERSION="0:1.15.0-1.module_el8.6.0+1087+b42c8331"
@@ -56,6 +56,7 @@ testimage_main="
   nmap-ncat
   procps-ng
   qemu-img-${QEMU_VERSION}
+  readline-0:7.0-10.el8
   tar
   util-linux
   which
@@ -64,6 +65,7 @@ testimage_main="
 # create a rpmtree for libvirt-devel. libvirt-devel is needed for compilation and unit-testing.
 libvirtdevel_main="
   libvirt-devel-${LIBVIRT_VERSION}
+  readline-0:7.0-10.el8
 "
 libvirtdevel_extra="
   keyutils-libs
@@ -88,6 +90,7 @@ launcherbase_main="
   libvirt-daemon-driver-qemu-${LIBVIRT_VERSION}
   passt-${PASST_VERSION}
   qemu-kvm-core-${QEMU_VERSION}
+  readline-0:7.0-10.el8
 "
 launcherbase_x86_64="
   edk2-ovmf-${EDK2_VERSION}
@@ -113,6 +116,7 @@ launcherbase_extra="
 
 handlerbase_main="
   qemu-img-${QEMU_VERSION}
+  readline-0:7.0-10.el8
 "
 handlerbase_extra="
   findutils
@@ -133,6 +137,7 @@ libguestfstools_main="
   libvirt-daemon-driver-qemu-${LIBVIRT_VERSION}
   qemu-kvm-core-${QEMU_VERSION}
   seabios-${SEABIOS_VERSION}
+  readline-0:7.0-10.el8
 "
 libguestfstools_x86_64="
   edk2-ovmf-${EDK2_VERSION}
