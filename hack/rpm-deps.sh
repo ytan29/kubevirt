@@ -7,11 +7,12 @@ source hack/bootstrap.sh
 source hack/config.sh
 
 LIBVIRT_VERSION=${LIBVIRT_VERSION:-0:8.0.0-2.module_el8.6.0+1087+b42c8331}
-QEMU_VERSION=${QEMU_VERSION:-15:6.2.0-5.module_el8.6.0+1087+b42c8331}
+#QEMU_VERSION=${QEMU_VERSION:-15:6.2.0-5.module_el8.6.0+1087+b42c8331}
+QEMU_VERSION="15:6.2.0-5.el8"
 SEABIOS_VERSION=${SEABIOS_VERSION:-0:1.15.0-1.module_el8.6.0+1087+b42c8331}
 EDK2_VERSION=${EDK2_VERSION:-0:20220126gitbb1bba3d77-2.el8}
 LIBGUESTFS_VERSION=${LIBGUESTFS_VERSION:-1:1.44.0-5.module_el8.6.0+1087+b42c8331}
-SINGLE_ARCH=${SINGLE_ARCH:-""}
+SINGLE_ARCH=${SINGLE_ARCH:-"x86_64"}
 
 bazeldnf_repos="--repofile rpm/repo.yaml"
 if [ "${CUSTOM_REPO}" ]; then
@@ -81,7 +82,6 @@ launcherbase_base="
   libvirt-client-${LIBVIRT_VERSION}
   libvirt-daemon-driver-qemu-${LIBVIRT_VERSION}
   qemu-kvm-core-${QEMU_VERSION}
-  passt
 "
 launcherbase_x86_64="
   edk2-ovmf-${EDK2_VERSION}

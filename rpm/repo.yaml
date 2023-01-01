@@ -15,6 +15,11 @@ repositories:
   baseurl: https://download.copr.fedorainfracloud.org/results/sbrivio/passt/centos-stream-8-x86_64
   name: centos/stream8-passt-x86_64
   gpgkey: https://download.copr.fedorainfracloud.org/results/sbrivio/passt/pubkey.gpg
+- arch: x86_64
+  baseurl: http://localhost:3031
+  name: centos/custom-qemu-x86_64
+  gpgcheck: 0
+  repo_gpgcheck: 0
 - arch: aarch64
   baseurl: http://mirror.centos.org/centos/8-stream/BaseOS/aarch64/os/
   name: centos/stream8-baseos-aarch64
