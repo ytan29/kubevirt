@@ -19,10 +19,7 @@ if [ -e /dev/sev ]; then
   chmod o+rw /dev/sev
 fi
 
-virtqemud -d
-# bugfix
-# virsh unable to communicate with virtqemud-sock automatically
-echo 'uri_default = "qemu+unix:///session?socket=/var/run/libvirt/virtqemud-sock"' >  /etc/libvirt/libvirt.conf
+libvirtd -d
 
 virsh domcapabilities --machine q35 --arch x86_64 --virttype $VIRTTYPE > /var/lib/kubevirt-node-labeller/virsh_domcapabilities.xml
 
