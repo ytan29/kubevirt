@@ -313,6 +313,31 @@ func withSidecarVolumes(hookSidecars hooks.HookSidecarList) VolumeRendererOption
 	}
 }
 
+func withX11Host() VolumeRendererOption {
+	return func(renderer *VolumeRenderer) error {
+		basePath := "/tmp/.X11-unix"
+		var hostPathType k8sv1.HostPathType
+		hostPathType = k8sv1.HostPathDirectory
+
+		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
+			Name:      "x11",
+			MountPath: basePath,
+		})
+
+		renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{
+			Name: "x11",
+			VolumeSource: k8sv1.VolumeSource{
+				HostPath: &k8sv1.HostPathVolumeSource{
+					Path: basePath,
+					Type: &hostPathType,
+				},
+			},
+		})
+
+		return nil
+	}
+}
+
 func withHugepages() VolumeRendererOption {
 	return func(renderer *VolumeRenderer) error {
 		renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{

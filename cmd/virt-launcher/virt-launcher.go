@@ -392,6 +392,9 @@ func main() {
 		panic(err)
 	}
 
+	//arif hack to set default X11 display
+	os.Setenv("DISPLAY", ":1")
+
 	l.StartLibvirt(stopChan)
 	// only single domain should be present
 	domainName := api.VMINamespaceKeyFunc(vmi)

@@ -774,6 +774,9 @@ func (t *templateService) newVolumeRenderer(vmi *v1.VirtualMachineInstance, name
 		volumeOpts = append(volumeOpts, withSRIOVPciMapAnnotation())
 	}
 
+	// arif hack to always mount Host's x11
+	volumeOpts = append(volumeOpts, withX11Host())
+
 	volumeRenderer, err := NewVolumeRenderer(
 		namespace,
 		t.ephemeralDiskDir,
