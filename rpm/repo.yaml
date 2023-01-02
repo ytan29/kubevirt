@@ -20,6 +20,11 @@ repositories:
   name: centos/custom-qemu-x86_64
   gpgcheck: 0
   repo_gpgcheck: 0
+- arch: x86_64
+  baseurl: https://pkgs.dyn.su/el8/extras/x86_64/
+  name: centos/raven-extras
+  gpgcheck: 0
+  repo_gpgcheck: 0
 - arch: aarch64
   baseurl: http://mirror.centos.org/centos/8-stream/BaseOS/aarch64/os/
   name: centos/stream8-baseos-aarch64

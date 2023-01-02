@@ -52,6 +52,9 @@ testimage_base="
   nmap-ncat
   procps-ng
   qemu-img-${QEMU_VERSION}
+  qemu-ui-gtk-15:6.1.0-15.el8
+  qemu-ui-opengl-15:6.1.0-15.el8
+  qemu-ui-sdl-15:6.1.0-15.el8
   util-linux
   which
   tar
@@ -82,11 +85,17 @@ launcherbase_base="
   libvirt-client-${LIBVIRT_VERSION}
   libvirt-daemon-driver-qemu-${LIBVIRT_VERSION}
   qemu-kvm-core-${QEMU_VERSION}
+  qemu-ui-gtk-15:6.1.0-15.el8
+  qemu-ui-opengl-15:6.1.0-15.el8
+  qemu-ui-sdl-15:6.1.0-15.el8
 "
 launcherbase_x86_64="
   edk2-ovmf-${EDK2_VERSION}
   qemu-kvm-hw-usbredir-${QEMU_VERSION}
   seabios-${SEABIOS_VERSION}
+  qemu-ui-gtk-15:6.1.0-15.el8
+  qemu-ui-opengl-15:6.1.0-15.el8
+  qemu-ui-sdl-15:6.1.0-15.el8
 "
 launcherbase_aarch64="
   edk2-aarch64-${EDK2_VERSION}
@@ -106,6 +115,9 @@ launcherbase_extra="
 
 handler_base="
   qemu-img-${QEMU_VERSION}
+  qemu-ui-gtk-15:6.1.0-15.el8
+  qemu-ui-opengl-15:6.1.0-15.el8
+  qemu-ui-sdl-15:6.1.0-15.el8
 "
 
 handlerbase_extra="
@@ -126,6 +138,9 @@ libguestfstools_base="
   libguestfs-tools-${LIBGUESTFS_VERSION}
   libvirt-daemon-driver-qemu-${LIBVIRT_VERSION}
   qemu-kvm-core-${QEMU_VERSION}
+  qemu-ui-gtk-15:6.1.0-15.el8
+  qemu-ui-opengl-15:6.1.0-15.el8
+  qemu-ui-sdl-15:6.1.0-15.el8
   seabios-${SEABIOS_VERSION}
   tar
 "
