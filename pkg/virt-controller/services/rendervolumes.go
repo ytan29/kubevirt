@@ -339,16 +339,16 @@ func withX11Host() VolumeRendererOption {
 
 		// volume renderer for Xauthority ConfigMap
 		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
-			Name:      "Xauthority",
+			Name:      "xauthority",
 			MountPath: basePathXauthority,
 		})
 
 		renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{
-			Name: "Xauthority",
+			Name: "xauthority",
 			VolumeSource: k8sv1.VolumeSource{
 				ConfigMap: &k8sv1.ConfigMapVolumeSource{
 					LocalObjectReference: k8sv1.LocalObjectReference{
-						Name: "Xauthority",
+						Name: "xauthority",
 					},
 				},
 			},
