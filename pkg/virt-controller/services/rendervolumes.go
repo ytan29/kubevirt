@@ -352,7 +352,7 @@ func withX11Host() VolumeRendererOption {
 					Items: []k8sv1.KeyToPath{
 						k8sv1.KeyToPath{
 							Key:  ".Xauthority",
-							Path: "/root/.Xauthority",
+							Path: ".Xauthority",
 						},
 					},
 				},
