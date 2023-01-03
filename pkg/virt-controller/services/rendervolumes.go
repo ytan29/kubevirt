@@ -316,7 +316,6 @@ func withSidecarVolumes(hookSidecars hooks.HookSidecarList) VolumeRendererOption
 func withX11Host() VolumeRendererOption {
 	return func(renderer *VolumeRenderer) error {
 		basePathX11unix := "/tmp/.X11-unix"
-		basePathXauthority := "/root/.Xauthority"
 
 		var hostPathType k8sv1.HostPathType
 		hostPathType = k8sv1.HostPathDirectory
