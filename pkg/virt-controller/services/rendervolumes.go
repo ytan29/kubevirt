@@ -315,21 +315,41 @@ func withSidecarVolumes(hookSidecars hooks.HookSidecarList) VolumeRendererOption
 
 func withX11Host() VolumeRendererOption {
 	return func(renderer *VolumeRenderer) error {
-		basePath := "/tmp/.X11-unix"
+		basePathX11unix := "/tmp/.X11-unix"
+		basePathXauthority := "/root/.Xauthority"
+
 		var hostPathType k8sv1.HostPathType
 		hostPathType = k8sv1.HostPathDirectory
 
+		// volume renderer for X11unix hostpath
 		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
-			Name:      "x11",
-			MountPath: basePath,
+			Name:      "x11unix",
+			MountPath: basePathX11unix,
 		})
 
 		renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{
-			Name: "x11",
+			Name: "x11unix",
 			VolumeSource: k8sv1.VolumeSource{
 				HostPath: &k8sv1.HostPathVolumeSource{
-					Path: basePath,
+					Path: basePathX11unix,
 					Type: &hostPathType,
+				},
+			},
+		})
+
+		// volume renderer for Xauthority ConfigMap
+		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
+			Name:      "Xauthority",
+			MountPath: basePathXauthority,
+		})
+
+		renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{
+			Name: "Xauthority",
+			VolumeSource: k8sv1.VolumeSource{
+				ConfigMap: &k8sv1.ConfigMapVolumeSource{
+					LocalObjectReference: k8sv1.LocalObjectReference{
+						Name: "Xauthority",
+					},
 				},
 			},
 		})
