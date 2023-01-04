@@ -64,6 +64,22 @@ func IsVMIVirtiofsEnabled(vmi *v1.VirtualMachineInstance) bool {
 	return false
 }
 
+func IsUSBVMI(vmi *v1.VirtualMachineInstance) bool {
+	if vmi.Spec.Domain.Devices.USBs != nil && len(vmi.Spec.Domain.Devices.USBs) != 0 {
+		return true
+	}
+	return false
+}
+
+// FLAGxy
+// Check if a VMI spec requests VirtIO-FS
+func IsDisplayEnabled(vmi *v1.VirtualMachineInstance) bool {
+	if vmi.Spec.Domain.Devices.Displays != nil {
+		return true
+	}
+	return false
+}
+
 // Check if a VMI spec requests a HostDevice
 func IsHostDevVMI(vmi *v1.VirtualMachineInstance) bool {
 	if vmi.Spec.Domain.Devices.HostDevices != nil && len(vmi.Spec.Domain.Devices.HostDevices) != 0 {

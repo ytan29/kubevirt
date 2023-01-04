@@ -369,6 +369,23 @@ spec:
                     description: PermittedHostDevices holds information about devices
                       allowed for passthrough
                     properties:
+                      displayDevices:
+                        items:
+                          description: DisplayHostDevice represents a host display
+                            device allowed for passthrough
+                          properties:
+                            displayDevSelector:
+                              type: string
+                            externalResourceProvider:
+                              type: boolean
+                            resourceName:
+                              type: string
+                          required:
+                          - displayDevSelector
+                          - resourceName
+                          type: object
+                        type: array
+                        x-kubernetes-list-type: atomic
                       mediatedDevices:
                         items:
                           description: MediatedHostDevice represents a host mediated
@@ -410,6 +427,23 @@ spec:
                           required:
                           - pciVendorSelector
                           - resourceName
+                          type: object
+                        type: array
+                        x-kubernetes-list-type: atomic
+                      usbDevices:
+                        items:
+                          description: UsbHostDevice represents a host usb device
+                            allowed for passthrough
+                          properties:
+                            externalResourceProvider:
+                              type: boolean
+                            resourceName:
+                              type: string
+                            usbBusDevSelector:
+                              type: string
+                          required:
+                          - resourceName
+                          - usbBusDevSelector
                           type: object
                         type: array
                         x-kubernetes-list-type: atomic
@@ -2986,6 +3020,23 @@ spec:
                     description: PermittedHostDevices holds information about devices
                       allowed for passthrough
                     properties:
+                      displayDevices:
+                        items:
+                          description: DisplayHostDevice represents a host display
+                            device allowed for passthrough
+                          properties:
+                            displayDevSelector:
+                              type: string
+                            externalResourceProvider:
+                              type: boolean
+                            resourceName:
+                              type: string
+                          required:
+                          - displayDevSelector
+                          - resourceName
+                          type: object
+                        type: array
+                        x-kubernetes-list-type: atomic
                       mediatedDevices:
                         items:
                           description: MediatedHostDevice represents a host mediated
@@ -3027,6 +3078,23 @@ spec:
                           required:
                           - pciVendorSelector
                           - resourceName
+                          type: object
+                        type: array
+                        x-kubernetes-list-type: atomic
+                      usbDevices:
+                        items:
+                          description: UsbHostDevice represents a host usb device
+                            allowed for passthrough
+                          properties:
+                            externalResourceProvider:
+                              type: boolean
+                            resourceName:
+                              type: string
+                            usbBusDevSelector:
+                              type: string
+                          required:
+                          - resourceName
+                          - usbBusDevSelector
                           type: object
                         type: array
                         x-kubernetes-list-type: atomic

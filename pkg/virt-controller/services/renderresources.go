@@ -245,6 +245,28 @@ func WithHostDevices(hostDevices []v1.HostDevice) ResourceRendererOption {
 	}
 }
 
+func WithUSBs(usbs []v1.USB) ResourceRendererOption {
+	return func(renderer *ResourceRenderer) {
+		resources := renderer.ResourceRequirements()
+		for _, usb := range usbs {
+			requestResource(&resources, usb.DeviceName)
+		}
+		copyResources(resources.Limits, renderer.calculatedLimits)
+		copyResources(resources.Requests, renderer.calculatedRequests)
+	}
+}
+
+func WithDisplays(displays []v1.Display) ResourceRendererOption {
+	return func(renderer *ResourceRenderer) {
+		resources := renderer.ResourceRequirements()
+		for _, dev := range displays {
+			requestResource(&resources, dev.DeviceName)
+		}
+		copyResources(resources.Limits, renderer.calculatedLimits)
+		copyResources(resources.Requests, renderer.calculatedRequests)
+	}
+}
+
 func WithSEV() ResourceRendererOption {
 	return func(renderer *ResourceRenderer) {
 		resources := renderer.ResourceRequirements()
@@ -464,9 +486,29 @@ func validatePermittedHostDevices(spec *v1.VirtualMachineInstanceSpec, config *v
 				errors = append(errors, fmt.Sprintf("GPU %s is not permitted in permittedHostDevices configuration", hostDev.DeviceName))
 			}
 		}
+
+		for _, dev := range hostDevs.UsbDevices {
+			supportedHostDevicesMap[dev.ResourceName] = true
+		}
+		// flagXY
+		for _, dev := range hostDevs.DisplayDevices {
+			supportedHostDevicesMap[dev.ResourceName] = true
+		}
+
 		for _, hostDev := range spec.Domain.Devices.HostDevices {
 			if _, exist := supportedHostDevicesMap[hostDev.DeviceName]; !exist {
 				errors = append(errors, fmt.Sprintf("HostDevice %s is not permitted in permittedHostDevices configuration", hostDev.DeviceName))
+			}
+		}
+		for _, hostDev := range spec.Domain.Devices.USBs {
+			if _, exist := supportedHostDevicesMap[hostDev.DeviceName]; !exist {
+				errors = append(errors, fmt.Sprintf("USB %s is not permitted in permittedHostDevices configuration", hostDev.DeviceName))
+			}
+		}
+
+		for _, hostDev := range spec.Domain.Devices.Displays {
+			if _, exist := supportedHostDevicesMap[hostDev.DeviceName]; !exist {
+				errors = append(errors, fmt.Sprintf("USB %s is not permitted in permittedHostDevices configuration", hostDev.DeviceName))
 			}
 		}
 	}

@@ -193,6 +193,46 @@ func (c *DeviceController) updatePermittedHostDevicePlugins() []Device {
 		return permittedDevices
 	}
 
+	// flagXY
+	if len(hostDevs.DisplayDevices) != 0 {
+		supportedDisplayDeviceMap := make(map[string]string)
+		for _, dev := range hostDevs.DisplayDevices {
+			log.Log.V(4).Infof("Permitted Display device in the cluster, ID: %s, resourceName: %s, externalProvider: %t",
+				strings.ToLower(dev.DisplayDevSelector),
+				dev.ResourceName,
+				dev.ExternalResourceProvider)
+			// do not add a device plugin for this resource if it's being provided via an external device plugin
+			if !dev.ExternalResourceProvider {
+				supportedDisplayDeviceMap[strings.ToLower(dev.DisplayDevSelector)] = dev.ResourceName
+			}
+		}
+
+		for resourceName, devices := range discoverPermittedHostDisplayDevices(supportedDisplayDeviceMap) {
+			log.Log.V(4).Infof("Discovered Display %d devices on the node for the resource: %s", len(devices), resourceName)
+			// add a device plugin only for new devices
+			permittedDevices = append(permittedDevices, NewDisplayDevicePlugin(devices, resourceName))
+		}
+	}
+
+	if len(hostDevs.UsbDevices) != 0 {
+		supportedUSBDeviceMap := make(map[string]string)
+		for _, usbDev := range hostDevs.UsbDevices {
+			log.Log.V(4).Infof("Permitted USB device in the cluster, ID: %s, resourceName: %s, externalProvider: %t",
+				strings.ToLower(usbDev.USBBusDevSelector),
+				usbDev.ResourceName,
+				usbDev.ExternalResourceProvider)
+			// do not add a device plugin for this resource if it's being provided via an external device plugin
+			if !usbDev.ExternalResourceProvider {
+				supportedUSBDeviceMap[strings.ToLower(usbDev.USBBusDevSelector)] = usbDev.ResourceName
+			}
+		}
+		for usbResourceName, usbDevices := range discoverPermittedHostUSBDevices(supportedUSBDeviceMap) {
+			log.Log.V(4).Infof("Discovered USBs %d devices on the node for the resource: %s", len(usbDevices), usbResourceName)
+			// add a device plugin only for new devices
+			permittedDevices = append(permittedDevices, NewUSBDevicePlugin(usbDevices, usbResourceName))
+		}
+	}
+
 	if len(hostDevs.PciHostDevices) != 0 {
 		supportedPCIDeviceMap := make(map[string]string)
 		for _, pciDev := range hostDevs.PciHostDevices {

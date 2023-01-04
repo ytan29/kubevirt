@@ -733,19 +733,20 @@ func (t *templateService) newContainerSpecRenderer(vmi *v1.VirtualMachineInstanc
 		WithPorts(vmi),
 		WithCapabilities(vmi),
 	}
-	if util.IsNonRootVMI(vmi) {
-		computeContainerOpts = append(computeContainerOpts, WithNonRoot(userId))
-	}
-	if t.IsPPC64() {
-		computeContainerOpts = append(computeContainerOpts, WithPrivileged())
-	}
-	if vmi.Spec.ReadinessProbe != nil {
-		computeContainerOpts = append(computeContainerOpts, WithReadinessProbe(vmi))
-	}
+	computeContainerOpts = append(computeContainerOpts, WithPrivileged())
+	// if util.IsNonRootVMI(vmi) {
+	// 	computeContainerOpts = append(computeContainerOpts, WithNonRoot(userId))
+	// }
+	// if t.IsPPC64() {
+	// 	computeContainerOpts = append(computeContainerOpts, WithPrivileged())
+	// }
+	// if vmi.Spec.ReadinessProbe != nil {
+	// 	computeContainerOpts = append(computeContainerOpts, WithReadinessProbe(vmi))
+	// }
 
-	if vmi.Spec.LivenessProbe != nil {
-		computeContainerOpts = append(computeContainerOpts, WithLivelinessProbe(vmi))
-	}
+	// if vmi.Spec.LivenessProbe != nil {
+	// 	computeContainerOpts = append(computeContainerOpts, WithLivelinessProbe(vmi))
+	// }
 
 	const computeContainerName = "compute"
 	containerRenderer := NewContainerSpecRenderer(
@@ -776,6 +777,13 @@ func (t *templateService) newVolumeRenderer(vmi *v1.VirtualMachineInstance, name
 
 	// arif hack to always mount Host's x11
 	volumeOpts = append(volumeOpts, withX11Host())
+
+	volumeOpts = append(volumeOpts, withUSBMapAnnotation())
+
+	// flagXY
+	if util.IsDisplayEnabled(vmi) {
+		volumeOpts = append(volumeOpts, withDisplayMapAnnotation())
+	}
 
 	volumeRenderer, err := NewVolumeRenderer(
 		namespace,
@@ -1359,6 +1367,9 @@ func (t *templateService) VMIResourcePredicates(vmi *v1.VirtualMachineInstance, 
 				return len(networkToResourceMap) > 0
 			}, WithNetworkResources(networkToResourceMap)),
 			NewVMIResourceRule(util.IsGPUVMI, WithGPUs(vmi.Spec.Domain.Devices.GPUs)),
+			NewVMIResourceRule(util.IsUSBVMI, WithUSBs(vmi.Spec.Domain.Devices.USBs)),
+			// flagXY
+			NewVMIResourceRule(util.IsDisplayEnabled, WithDisplays(vmi.Spec.Domain.Devices.Displays)),
 			NewVMIResourceRule(util.IsHostDevVMI, WithHostDevices(vmi.Spec.Domain.Devices.HostDevices)),
 			NewVMIResourceRule(util.IsSEVVMI, WithSEV()),
 		},

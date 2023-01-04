@@ -849,6 +849,23 @@ var CRDsValidation map[string]string = map[string]string{
               description: PermittedHostDevices holds information about devices allowed
                 for passthrough
               properties:
+                displayDevices:
+                  items:
+                    description: DisplayHostDevice represents a host display device
+                      allowed for passthrough
+                    properties:
+                      displayDevSelector:
+                        type: string
+                      externalResourceProvider:
+                        type: boolean
+                      resourceName:
+                        type: string
+                    required:
+                    - displayDevSelector
+                    - resourceName
+                    type: object
+                  type: array
+                  x-kubernetes-list-type: atomic
                 mediatedDevices:
                   items:
                     description: MediatedHostDevice represents a host mediated device
@@ -889,6 +906,23 @@ var CRDsValidation map[string]string = map[string]string{
                     required:
                     - pciVendorSelector
                     - resourceName
+                    type: object
+                  type: array
+                  x-kubernetes-list-type: atomic
+                usbDevices:
+                  items:
+                    description: UsbHostDevice represents a host usb device allowed
+                      for passthrough
+                    properties:
+                      externalResourceProvider:
+                        type: boolean
+                      resourceName:
+                        type: string
+                      usbBusDevSelector:
+                        type: string
+                    required:
+                    - resourceName
+                    - usbBusDevSelector
                     type: object
                   type: array
                   x-kubernetes-list-type: atomic
@@ -4983,6 +5017,26 @@ var CRDsValidation map[string]string = map[string]string{
                             - name
                             type: object
                           type: array
+                        displays:
+                          description: Whether to attach a Display device to the vmi.
+                          items:
+                            properties:
+                              deviceName:
+                                type: string
+                              monitor:
+                                description: If specified, the bus-dev will be assigned
+                                  instead
+                                type: string
+                              name:
+                                description: Name of the Display device as exposed
+                                  by a device plugin
+                                type: string
+                            required:
+                            - deviceName
+                            - name
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: atomic
                         filesystems:
                           description: Filesystems describes filesystem which is connected
                             to the vmi.
@@ -5244,6 +5298,26 @@ var CRDsValidation map[string]string = map[string]string{
                         tpm:
                           description: Whether to emulate a TPM device.
                           type: object
+                        usbs:
+                          description: Whether to attach a USB device to the vmi.
+                          items:
+                            properties:
+                              busDev:
+                                description: If specified, the bus-dev will be assigned
+                                  instead
+                                type: string
+                              deviceName:
+                                type: string
+                              name:
+                                description: Name of the USB device as exposed by
+                                  a device plugin
+                                type: string
+                            required:
+                            - deviceName
+                            - name
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: atomic
                         useVirtioTransitional:
                           description: Fall back to legacy virtio 0.9 support if virtio
                             bus is selected on devices. This is helpful for old machines
@@ -9134,6 +9208,25 @@ var CRDsValidation map[string]string = map[string]string{
                     - name
                     type: object
                   type: array
+                displays:
+                  description: Whether to attach a Display device to the vmi.
+                  items:
+                    properties:
+                      deviceName:
+                        type: string
+                      monitor:
+                        description: If specified, the bus-dev will be assigned instead
+                        type: string
+                      name:
+                        description: Name of the Display device as exposed by a device
+                          plugin
+                        type: string
+                    required:
+                    - deviceName
+                    - name
+                    type: object
+                  type: array
+                  x-kubernetes-list-type: atomic
                 filesystems:
                   description: Filesystems describes filesystem which is connected
                     to the vmi.
@@ -9386,6 +9479,25 @@ var CRDsValidation map[string]string = map[string]string{
                 tpm:
                   description: Whether to emulate a TPM device.
                   type: object
+                usbs:
+                  description: Whether to attach a USB device to the vmi.
+                  items:
+                    properties:
+                      busDev:
+                        description: If specified, the bus-dev will be assigned instead
+                        type: string
+                      deviceName:
+                        type: string
+                      name:
+                        description: Name of the USB device as exposed by a device
+                          plugin
+                        type: string
+                    required:
+                    - deviceName
+                    - name
+                    type: object
+                  type: array
+                  x-kubernetes-list-type: atomic
                 useVirtioTransitional:
                   description: Fall back to legacy virtio 0.9 support if virtio bus
                     is selected on devices. This is helpful for old machines like
@@ -11433,6 +11545,25 @@ var CRDsValidation map[string]string = map[string]string{
                     - name
                     type: object
                   type: array
+                displays:
+                  description: Whether to attach a Display device to the vmi.
+                  items:
+                    properties:
+                      deviceName:
+                        type: string
+                      monitor:
+                        description: If specified, the bus-dev will be assigned instead
+                        type: string
+                      name:
+                        description: Name of the Display device as exposed by a device
+                          plugin
+                        type: string
+                    required:
+                    - deviceName
+                    - name
+                    type: object
+                  type: array
+                  x-kubernetes-list-type: atomic
                 filesystems:
                   description: Filesystems describes filesystem which is connected
                     to the vmi.
@@ -11685,6 +11816,25 @@ var CRDsValidation map[string]string = map[string]string{
                 tpm:
                   description: Whether to emulate a TPM device.
                   type: object
+                usbs:
+                  description: Whether to attach a USB device to the vmi.
+                  items:
+                    properties:
+                      busDev:
+                        description: If specified, the bus-dev will be assigned instead
+                        type: string
+                      deviceName:
+                        type: string
+                      name:
+                        description: Name of the USB device as exposed by a device
+                          plugin
+                        type: string
+                    required:
+                    - deviceName
+                    - name
+                    type: object
+                  type: array
+                  x-kubernetes-list-type: atomic
                 useVirtioTransitional:
                   description: Fall back to legacy virtio 0.9 support if virtio bus
                     is selected on devices. This is helpful for old machines like
@@ -13517,6 +13667,26 @@ var CRDsValidation map[string]string = map[string]string{
                             - name
                             type: object
                           type: array
+                        displays:
+                          description: Whether to attach a Display device to the vmi.
+                          items:
+                            properties:
+                              deviceName:
+                                type: string
+                              monitor:
+                                description: If specified, the bus-dev will be assigned
+                                  instead
+                                type: string
+                              name:
+                                description: Name of the Display device as exposed
+                                  by a device plugin
+                                type: string
+                            required:
+                            - deviceName
+                            - name
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: atomic
                         filesystems:
                           description: Filesystems describes filesystem which is connected
                             to the vmi.
@@ -13778,6 +13948,26 @@ var CRDsValidation map[string]string = map[string]string{
                         tpm:
                           description: Whether to emulate a TPM device.
                           type: object
+                        usbs:
+                          description: Whether to attach a USB device to the vmi.
+                          items:
+                            properties:
+                              busDev:
+                                description: If specified, the bus-dev will be assigned
+                                  instead
+                                type: string
+                              deviceName:
+                                type: string
+                              name:
+                                description: Name of the USB device as exposed by
+                                  a device plugin
+                                type: string
+                            required:
+                            - deviceName
+                            - name
+                            type: object
+                          type: array
+                          x-kubernetes-list-type: atomic
                         useVirtioTransitional:
                           description: Fall back to legacy virtio 0.9 support if virtio
                             bus is selected on devices. This is helpful for old machines
@@ -17462,6 +17652,27 @@ var CRDsValidation map[string]string = map[string]string{
                                     - name
                                     type: object
                                   type: array
+                                displays:
+                                  description: Whether to attach a Display device
+                                    to the vmi.
+                                  items:
+                                    properties:
+                                      deviceName:
+                                        type: string
+                                      monitor:
+                                        description: If specified, the bus-dev will
+                                          be assigned instead
+                                        type: string
+                                      name:
+                                        description: Name of the Display device as
+                                          exposed by a device plugin
+                                        type: string
+                                    required:
+                                    - deviceName
+                                    - name
+                                    type: object
+                                  type: array
+                                  x-kubernetes-list-type: atomic
                                 filesystems:
                                   description: Filesystems describes filesystem which
                                     is connected to the vmi.
@@ -17743,6 +17954,27 @@ var CRDsValidation map[string]string = map[string]string{
                                 tpm:
                                   description: Whether to emulate a TPM device.
                                   type: object
+                                usbs:
+                                  description: Whether to attach a USB device to the
+                                    vmi.
+                                  items:
+                                    properties:
+                                      busDev:
+                                        description: If specified, the bus-dev will
+                                          be assigned instead
+                                        type: string
+                                      deviceName:
+                                        type: string
+                                      name:
+                                        description: Name of the USB device as exposed
+                                          by a device plugin
+                                        type: string
+                                    required:
+                                    - deviceName
+                                    - name
+                                    type: object
+                                  type: array
+                                  x-kubernetes-list-type: atomic
                                 useVirtioTransitional:
                                   description: Fall back to legacy virtio 0.9 support
                                     if virtio bus is selected on devices. This is
@@ -22111,6 +22343,27 @@ var CRDsValidation map[string]string = map[string]string{
                                         - name
                                         type: object
                                       type: array
+                                    displays:
+                                      description: Whether to attach a Display device
+                                        to the vmi.
+                                      items:
+                                        properties:
+                                          deviceName:
+                                            type: string
+                                          monitor:
+                                            description: If specified, the bus-dev
+                                              will be assigned instead
+                                            type: string
+                                          name:
+                                            description: Name of the Display device
+                                              as exposed by a device plugin
+                                            type: string
+                                        required:
+                                        - deviceName
+                                        - name
+                                        type: object
+                                      type: array
+                                      x-kubernetes-list-type: atomic
                                     filesystems:
                                       description: Filesystems describes filesystem
                                         which is connected to the vmi.
@@ -22402,6 +22655,27 @@ var CRDsValidation map[string]string = map[string]string{
                                     tpm:
                                       description: Whether to emulate a TPM device.
                                       type: object
+                                    usbs:
+                                      description: Whether to attach a USB device
+                                        to the vmi.
+                                      items:
+                                        properties:
+                                          busDev:
+                                            description: If specified, the bus-dev
+                                              will be assigned instead
+                                            type: string
+                                          deviceName:
+                                            type: string
+                                          name:
+                                            description: Name of the USB device as
+                                              exposed by a device plugin
+                                            type: string
+                                        required:
+                                        - deviceName
+                                        - name
+                                        type: object
+                                      type: array
+                                      x-kubernetes-list-type: atomic
                                     useVirtioTransitional:
                                       description: Fall back to legacy virtio 0.9
                                         support if virtio bus is selected on devices.

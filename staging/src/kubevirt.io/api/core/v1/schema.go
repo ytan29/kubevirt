@@ -397,6 +397,7 @@ type Firmware struct {
 	KernelBoot *KernelBoot `json:"kernelBoot,omitempty"`
 }
 
+// +k8s:openapi-gen=true
 type Devices struct {
 	// Fall back to legacy virtio 0.9 support if virtio bus is selected on devices.
 	// This is helpful for old machines like CentOS6 or RHEL6 which
@@ -443,6 +444,14 @@ type Devices struct {
 	// +optional
 	// +listType=atomic
 	GPUs []GPU `json:"gpus,omitempty"`
+	//Whether to attach a USB device to the vmi.
+	// +optional
+	// +listType=atomic
+	USBs []USB `json:"usbs,omitempty"`
+	//Whether to attach a Display device to the vmi.
+	// +optional
+	// +listType=atomic
+	Displays []Display `json:"displays,omitempty"`
 	// Filesystems describes filesystem which is connected to the vmi.
 	// +optional
 	// +listType=atomic
@@ -532,6 +541,24 @@ type GPU struct {
 	// If specified, the virtual network interface address and its tag will be provided to the guest via config drive
 	// +optional
 	Tag string `json:"tag,omitempty"`
+}
+
+// +k8s:openapi-gen=true
+type USB struct {
+	// Name of the USB device as exposed by a device plugin
+	Name       string `json:"name"`
+	DeviceName string `json:"deviceName"`
+	// If specified, the bus-dev will be assigned instead
+	BusDev string `json:"busDev,omitempty"`
+}
+
+// +k8s:openapi-gen=true
+type Display struct {
+	// Name of the Display device as exposed by a device plugin
+	Name       string `json:"name"`
+	DeviceName string `json:"deviceName"`
+	// If specified, the bus-dev will be assigned instead
+	Monitor string `json:"monitor,omitempty"`
 }
 
 type VGPUOptions struct {

@@ -21,6 +21,7 @@ package hostdevice
 
 import (
 	"fmt"
+	"strings"
 
 	v1 "kubevirt.io/api/core/v1"
 	"kubevirt.io/client-go/log"
@@ -36,6 +37,7 @@ type HostDeviceMetaData struct {
 	Name              string
 	ResourceName      string
 	VirtualGPUOptions *v1.VGPUOptions
+	BusDev            string
 	// DecorateHook is a function pointer that may be used to mutate the domain host-device
 	// with additional specific parameters. E.g. guest PCI address.
 	DecorateHook func(hostDevice *api.HostDevice) error
@@ -56,6 +58,10 @@ func CreateMDEVHostDevices(hostDevicesData []HostDeviceMetaData, mdevAddrPool Ad
 		return createHostDevices(hostDevicesData, mdevAddrPool, createMDEVHostDeviceWithDisplay)
 	}
 	return createHostDevices(hostDevicesData, mdevAddrPool, createMDEVHostDevice)
+}
+
+func CreateUSBHostDevices(hostDevicesData []HostDeviceMetaData, usbAddrPool AddressPooler) ([]api.HostDevice, error) {
+	return createHostDevices(hostDevicesData, usbAddrPool, createUSBHostDevice)
 }
 
 func createHostDevices(hostDevicesData []HostDeviceMetaData, addrPool AddressPooler, createHostDev createHostDevice) ([]api.HostDevice, error) {
@@ -135,6 +141,23 @@ func createMDEVHostDevice(hostDeviceData HostDeviceMetaData, mdevUUID string) (*
 		Type:  "mdev",
 		Mode:  "subsystem",
 		Model: "vfio-pci",
+	}
+	return domainHostDevice, nil
+}
+
+func createUSBHostDevice(hostDeviceData HostDeviceMetaData, usbDevPath string) (*api.HostDevice, error) {
+	split := strings.Split(hostDeviceData.BusDev, "/")
+	domainHostDevice := &api.HostDevice{
+		Alias: api.NewUserDefinedAlias(hostDeviceData.AliasPrefix + hostDeviceData.Name),
+		Source: api.HostDeviceSource{
+			Address: &api.Address{
+				Bus:    split[0],
+				Device: split[1],
+			},
+		},
+		Type:    "usb",
+		Mode:    "subsystem",
+		Managed: "yes",
 	}
 	return domainHostDevice, nil
 }

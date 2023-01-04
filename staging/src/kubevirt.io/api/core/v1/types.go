@@ -2251,8 +2251,10 @@ type LogVerbosity struct {
 }
 
 const (
-	PCIResourcePrefix  = "PCI_RESOURCE"
-	MDevResourcePrefix = "MDEV_PCI_RESOURCE"
+	PCIResourcePrefix     = "PCI_RESOURCE"
+	MDevResourcePrefix    = "MDEV_PCI_RESOURCE"
+	USBResourcePrefix     = "USB_PCI_RESOURCE"
+	DisplayResourcePrefix = "DISPLAY_PCI_RESOURCE"
 )
 
 // PermittedHostDevices holds information about devices allowed for passthrough
@@ -2261,6 +2263,10 @@ type PermittedHostDevices struct {
 	PciHostDevices []PciHostDevice `json:"pciHostDevices,omitempty"`
 	// +listType=atomic
 	MediatedDevices []MediatedHostDevice `json:"mediatedDevices,omitempty"`
+	// +listType=atomic
+	UsbDevices []UsbHostDevice `json:"usbDevices,omitempty"`
+	// +listType=atomic
+	DisplayDevices []DisplayHostDevice `json:"displayDevices,omitempty"`
 }
 
 // PciHostDevice represents a host PCI device allowed for passthrough
@@ -2276,6 +2282,22 @@ type PciHostDevice struct {
 	// If true, KubeVirt will leave the allocation and monitoring to an
 	// external device plugin
 	ExternalResourceProvider bool `json:"externalResourceProvider,omitempty"`
+}
+
+// UsbHostDevice represents a host usb device allowed for passthrough
+// +k8s:openapi-gen=true
+type UsbHostDevice struct {
+	USBBusDevSelector        string `json:"usbBusDevSelector"`
+	ResourceName             string `json:"resourceName"`
+	ExternalResourceProvider bool   `json:"externalResourceProvider,omitempty"`
+}
+
+// DisplayHostDevice represents a host display device allowed for passthrough
+// +k8s:openapi-gen=true
+type DisplayHostDevice struct {
+	DisplayDevSelector       string `json:"displayDevSelector"`
+	ResourceName             string `json:"resourceName"`
+	ExternalResourceProvider bool   `json:"externalResourceProvider,omitempty"`
 }
 
 // MediatedHostDevice represents a host mediated device allowed for passthrough

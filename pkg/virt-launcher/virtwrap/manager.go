@@ -39,8 +39,10 @@ import (
 	"sync"
 	"time"
 
+	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/display"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/generic"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/gpu"
+	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/usb"
 
 	"kubevirt.io/kubevirt/pkg/downwardmetrics"
 	"kubevirt.io/kubevirt/pkg/network/cache"
@@ -816,6 +818,21 @@ func (l *LibvirtDomainManager) generateConverterContext(vmi *v1.VirtualMachineIn
 			return nil, err
 		}
 		c.GPUHostDevices = gpuHostDevices
+
+		logger.V(4).Infof("=================== attempting usb.CreateHostDevices %v: ", vmi.Spec.Domain.Devices.USBs)
+		usbHostDevices, err := usb.CreateHostDevices(vmi.Spec.Domain.Devices.USBs)
+		if err != nil {
+			return nil, err
+		}
+		logger.V(4).Infof("=================== usb.CreateHostDevices: %v", usbHostDevices)
+		c.USBHostDevices = usbHostDevices
+
+		displayDevices, err := display.CreateDisplayDevices(vmi.Spec.Domain.Devices.Displays)
+		if err != nil {
+			return nil, err
+		}
+		// logger.V(4).Infof("=================== display.CreateHostDevices: %v", displayHostDevices)
+		c.DisplayDevices = displayDevices
 	}
 
 	return c, nil

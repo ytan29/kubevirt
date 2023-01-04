@@ -15687,6 +15687,14 @@
        "$ref": "#/definitions/v1.Disk"
       }
      },
+     "displays": {
+      "description": "Whether to attach a Display device to the vmi.",
+      "type": "array",
+      "items": {
+       "$ref": "#/definitions/v1.Display"
+      },
+      "x-kubernetes-list-type": "atomic"
+     },
      "filesystems": {
       "description": "Filesystems describes filesystem which is connected to the vmi.",
       "type": "array",
@@ -15740,6 +15748,14 @@
      "tpm": {
       "description": "Whether to emulate a TPM device.",
       "$ref": "#/definitions/v1.TPMDevice"
+     },
+     "usbs": {
+      "description": "Whether to attach a USB device to the vmi.",
+      "type": "array",
+      "items": {
+       "$ref": "#/definitions/v1.USB"
+      },
+      "x-kubernetes-list-type": "atomic"
      },
      "useVirtioTransitional": {
       "description": "Fall back to legacy virtio 0.9 support if virtio bus is selected on devices. This is helpful for old machines like CentOS6 or RHEL6 which do not understand virtio_non_transitional (virtio 1.0).",
@@ -15834,6 +15850,45 @@
     "properties": {
      "memoryLimit": {
       "$ref": "#/definitions/k8s.io.apimachinery.pkg.api.resource.Quantity"
+     }
+    }
+   },
+   "v1.Display": {
+    "type": "object",
+    "required": [
+     "name",
+     "deviceName"
+    ],
+    "properties": {
+     "deviceName": {
+      "type": "string"
+     },
+     "monitor": {
+      "description": "If specified, the bus-dev will be assigned instead",
+      "type": "string"
+     },
+     "name": {
+      "description": "Name of the Display device as exposed by a device plugin",
+      "type": "string"
+     }
+    }
+   },
+   "v1.DisplayHostDevice": {
+    "description": "DisplayHostDevice represents a host display device allowed for passthrough",
+    "type": "object",
+    "required": [
+     "displayDevSelector",
+     "resourceName"
+    ],
+    "properties": {
+     "displayDevSelector": {
+      "type": "string"
+     },
+     "externalResourceProvider": {
+      "type": "boolean"
+     },
+     "resourceName": {
+      "type": "string"
      }
     }
    },
@@ -17300,6 +17355,13 @@
     "description": "PermittedHostDevices holds information about devices allowed for passthrough",
     "type": "object",
     "properties": {
+     "displayDevices": {
+      "type": "array",
+      "items": {
+       "$ref": "#/definitions/v1.DisplayHostDevice"
+      },
+      "x-kubernetes-list-type": "atomic"
+     },
      "mediatedDevices": {
       "type": "array",
       "items": {
@@ -17311,6 +17373,13 @@
       "type": "array",
       "items": {
        "$ref": "#/definitions/v1.PciHostDevice"
+      },
+      "x-kubernetes-list-type": "atomic"
+     },
+     "usbDevices": {
+      "type": "array",
+      "items": {
+       "$ref": "#/definitions/v1.UsbHostDevice"
       },
       "x-kubernetes-list-type": "atomic"
      }
@@ -17869,6 +17938,26 @@
      }
     }
    },
+   "v1.USB": {
+    "type": "object",
+    "required": [
+     "name",
+     "deviceName"
+    ],
+    "properties": {
+     "busDev": {
+      "description": "If specified, the bus-dev will be assigned instead",
+      "type": "string"
+     },
+     "deviceName": {
+      "type": "string"
+     },
+     "name": {
+      "description": "Name of the USB device as exposed by a device plugin",
+      "type": "string"
+     }
+    }
+   },
    "v1.UnpauseOptions": {
     "description": "UnpauseOptions may be provided on unpause request.",
     "type": "object",
@@ -17887,6 +17976,25 @@
      },
      "kind": {
       "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+      "type": "string"
+     }
+    }
+   },
+   "v1.UsbHostDevice": {
+    "description": "UsbHostDevice represents a host usb device allowed for passthrough",
+    "type": "object",
+    "required": [
+     "usbBusDevSelector",
+     "resourceName"
+    ],
+    "properties": {
+     "externalResourceProvider": {
+      "type": "boolean"
+     },
+     "resourceName": {
+      "type": "string"
+     },
+     "usbBusDevSelector": {
       "type": "string"
      }
     }
