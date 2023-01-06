@@ -198,7 +198,8 @@ func (dpi *DisplayDevicePlugin) Allocate(_ context.Context, r *pluginapi.Allocat
 		deviceSpecs := make([]*pluginapi.DeviceSpec, 0)
 		for _, devID := range request.DevicesIDs {
 			log.DefaultLogger().Infof("Allocate: devID: %s", devID)
-			allocatedDevices = append(allocatedDevices, devID)
+			addarr := strings.Split(devID, ".")
+			allocatedDevices = append(allocatedDevices, addarr[0])
 
 			formatted := formatDisplayDeviceSpecs(devID)
 			log.DefaultLogger().Infof("Allocate: formatted display: %v", formatted)
