@@ -208,7 +208,7 @@ func (dpi *DisplayDevicePlugin) Allocate(_ context.Context, r *pluginapi.Allocat
 		}
 		containerResponse.Devices = deviceSpecs
 		envVar := make(map[string]string)
-		envVar[resourceNameEnvVar] = strings.Join(allocatedDevices, ",")
+		envVar["DISPLAY"] = strings.Join(allocatedDevices, ",")
 		log.Log.Infof("===================env var :%v", envVar)
 
 		containerResponse.Envs = envVar
