@@ -377,27 +377,31 @@ func withSRIOVPciMapAnnotation() VolumeRendererOption {
 	}
 }
 
-func withUSBMapAnnotation() VolumeRendererOption {
+func withUSBMapAnnotation(vmiUSBs []v1.USB) VolumeRendererOption {
 	return func(renderer *VolumeRenderer) error {
-		usbBasePath := "/dev/bus/usb"
+		usbBasePath := "/dev/bus/usb/"
 		var hostPathType k8sv1.HostPathType
-		hostPathType = k8sv1.HostPathDirectory
+		hostPathType = k8sv1.HostPathUnset
 
-		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
-			Name:      "usb",
-			MountPath: usbBasePath,
-		})
+		for _, dev := range vmiUSBs {
+			renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
+				Name:      "usb-" + dev.Name,
+				MountPath: usbBasePath + dev.BusDev,
+			})
 
-		renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{
-			Name: "usb",
-			VolumeSource: k8sv1.VolumeSource{
-				HostPath: &k8sv1.HostPathVolumeSource{
-					Path: usbBasePath,
-					Type: &hostPathType,
+			renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{
+				Name: "usb-" + dev.Name,
+				VolumeSource: k8sv1.VolumeSource{
+					HostPath: &k8sv1.HostPathVolumeSource{
+						Path: usbBasePath + dev.BusDev,
+						Type: &hostPathType,
+					},
 				},
-			},
-		})
-
+			})
+			log.DefaultLogger().Infof("USB Mount Path: %s", usbBasePath+dev.BusDev)
+			log.DefaultLogger().Infof("USB Mount Volume: %s", "usb-"+dev.Name)
+		}
+		//
 		// renderer.podVolumes = append(renderer.podVolumes,
 		// 	downwardAPIDirVolume(
 		// 		"usb", usbBasePath, fmt.Sprintf("metadata.annotations['%s']", sriov.NetworkPCIMapAnnot)),
