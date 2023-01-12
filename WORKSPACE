@@ -1412,6 +1412,12 @@ rpm(
 )
 
 rpm(
+    name = "gdk-pixbuf2-devel-0__2.36.12-5.el8.x86_64",
+    sha256 = "cb57dca67a2a2ada0da5941d60447de7e76fddc7feba8ddf25efa34e7fb8372e",
+    urls = ["http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/gdk-pixbuf2-devel-2.36.12-5.el8.x86_64.rpm"],
+)
+
+rpm(
     name = "gdk-pixbuf2-modules-0__2.36.12-5.el8.x86_64",
     sha256 = "f689bcf0759fcf467ef007f8a640e2829c05879a0a1ff7d3a3fd36130230f2c9",
     urls = ["http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/gdk-pixbuf2-modules-2.36.12-5.el8.x86_64.rpm"],
@@ -1472,6 +1478,12 @@ rpm(
     name = "glib2-0__2.56.4-160.el8.x86_64",
     sha256 = "143ad1fc5d281408bab3e2a29650b923d82f3008c8cf9101741b179c2c8f7565",
     urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/glib2-2.56.4-160.el8.x86_64.rpm"],
+)
+
+rpm(
+    name = "glib2-devel-0__2.56.4-160.el8.x86_64",
+    sha256 = "730ccc44e09fabe3827208c194bf78806bd5c1e405479489b4fa1737c1161945",
+    urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/glib2-devel-2.56.4-160.el8.x86_64.rpm"],
 )
 
 rpm(
@@ -1640,9 +1652,9 @@ rpm(
 )
 
 rpm(
-    name = "google-noto-sans-ui-fonts-0__20161022-7.el8.1.x86_64",
-    sha256 = "40fc863cf5c9768d33c7aa1045e4351d1859cc65f9cbbf9f2ce6de0398484db6",
-    urls = ["http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/google-noto-sans-ui-fonts-20161022-7.el8.1.noarch.rpm"],
+    name = "google-noto-sans-fonts-0__20161022-7.el8.1.x86_64",
+    sha256 = "2e9a537bd13169634052feb9411c2f4c315c57d791a260b615c42b1b6e44f002",
+    urls = ["http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/google-noto-sans-fonts-20161022-7.el8.1.noarch.rpm"],
 )
 
 rpm(
@@ -2459,18 +2471,6 @@ rpm(
 )
 
 rpm(
-    name = "liberation-fonts-common-1__2.00.3-7.el8.x86_64",
-    sha256 = "7e48c1ce8c9a48c0b7ca7795aafe83fe9871bd1ae88dfd31435bf318baac8f64",
-    urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/liberation-fonts-common-2.00.3-7.el8.noarch.rpm"],
-)
-
-rpm(
-    name = "liberation-serif-fonts-1__2.00.3-7.el8.x86_64",
-    sha256 = "a03cdb1554814e391e992d7b7d08cfe9ec9b7d2c858212e90f9cb4a368adf22e",
-    urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/liberation-serif-fonts-2.00.3-7.el8.noarch.rpm"],
-)
-
-rpm(
     name = "libevent-0__2.1.8-5.el8.aarch64",
     sha256 = "a7fed3b521d23e60539dcbd548bda2a62f0d745a99dd5feeb43b6539f7f88232",
     urls = [
@@ -2975,6 +2975,12 @@ rpm(
         "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/libpng-1.6.34-5.el8.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/cc2f054cf7ef006faf0b179701838ff8632c3ac5f45a0199a13f9c237f632b82",
     ],
+)
+
+rpm(
+    name = "libpng-devel-2__1.6.34-5.el8.x86_64",
+    sha256 = "a8cbe67a2f2ccb36bb765408686f9266204dea472a8b7b9120f23bbbc2c732a4",
+    urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/libpng-devel-1.6.34-5.el8.x86_64.rpm"],
 )
 
 rpm(
@@ -4013,12 +4019,6 @@ rpm(
 )
 
 rpm(
-    name = "paktype-tehreer-fonts-0__4.1-8.el8.x86_64",
-    sha256 = "a23bd0879f0c7843cd449731b38446a9c65ad86b25985a253d5bd6bbb4b91368",
-    urls = ["http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/paktype-tehreer-fonts-4.1-8.el8.noarch.rpm"],
-)
-
-rpm(
     name = "pam-0__1.3.1-22.el8.aarch64",
     sha256 = "b900edf1f702460be4a6b2e402e02887068fe9172b88256660b8c20b89a772d5",
     urls = [
@@ -4037,6 +4037,12 @@ rpm(
     name = "pango-0__1.42.4-8.el8.x86_64",
     sha256 = "1e74c391edf2f383b5c236e65ddd15bcf83883975b8d08b70808d2e14916d496",
     urls = ["http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/pango-1.42.4-8.el8.x86_64.rpm"],
+)
+
+rpm(
+    name = "paratype-pt-sans-fonts-0__20141121-6.el8.x86_64",
+    sha256 = "2b0631ae933c52fb0e8469c061e6855c730deced8f2e26ad5298cb326b942ec8",
+    urls = ["http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/paratype-pt-sans-fonts-20141121-6.el8.noarch.rpm"],
 )
 
 rpm(
@@ -4064,6 +4070,30 @@ rpm(
         "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/pcre-8.42-6.el8.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/876e9e99b0e50cb2752499045bafa903dd29e5c491d112daacef1ae16f614dad",
     ],
+)
+
+rpm(
+    name = "pcre-cpp-0__8.42-6.el8.x86_64",
+    sha256 = "fc70d989e2710dc14a92aee4410800dab37b8867e3b1879c9e64d1f9ef1176ff",
+    urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/pcre-cpp-8.42-6.el8.x86_64.rpm"],
+)
+
+rpm(
+    name = "pcre-devel-0__8.42-6.el8.x86_64",
+    sha256 = "469e7e08d2ec24ff36d9482fb627759e1865cbee2a6e062d6d20593095f0cfde",
+    urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/pcre-devel-8.42-6.el8.x86_64.rpm"],
+)
+
+rpm(
+    name = "pcre-utf16-0__8.42-6.el8.x86_64",
+    sha256 = "b972ace22d6b4459bd16ab2bc983ecbc47a79ba91a74e22f410d223750e6c05a",
+    urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/pcre-utf16-8.42-6.el8.x86_64.rpm"],
+)
+
+rpm(
+    name = "pcre-utf32-0__8.42-6.el8.x86_64",
+    sha256 = "dba3d4622e9854e6553660701a8dc4b470234cd04dba2084129bee8996e37b3e",
+    urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/pcre-utf32-8.42-6.el8.x86_64.rpm"],
 )
 
 rpm(
@@ -4749,7 +4779,7 @@ rpm(
 
 rpm(
     name = "qemu-img-15__6.2.0-5.el8.x86_64",
-    sha256 = "01937959e2d81af2e3d1b05970c98b9383bf127f522293ba92ea75e573f49fad",
+    sha256 = "10f0969441756f99339d872ebcefc62c57bb681f624857f5be105c304ce8d9d5",
     urls = ["http://localhost:3031/qemu-img-6.2.0-5.el8.x86_64.rpm"],
 )
 
@@ -4764,7 +4794,7 @@ rpm(
 
 rpm(
     name = "qemu-kvm-common-15__6.2.0-5.el8.x86_64",
-    sha256 = "23a8d02f681ddda709b3d896cc6f7fc7abd8d49d6b5169aed934581d36f4eacb",
+    sha256 = "8fe5226a976350cde690ca9133ab1e8cc3b6eebb8cd2626c890bff1492443318",
     urls = ["http://localhost:3031/qemu-kvm-common-6.2.0-5.el8.x86_64.rpm"],
 )
 
@@ -4779,7 +4809,7 @@ rpm(
 
 rpm(
     name = "qemu-kvm-core-15__6.2.0-5.el8.x86_64",
-    sha256 = "0b466a829d188e872e7af629297372c89c0646094795c2c253258d5dfb00f466",
+    sha256 = "32b1ffba6c53281fef4ea8749c139a946b01dd24b5984e0b593f9be7245f6f51",
     urls = ["http://localhost:3031/qemu-kvm-core-6.2.0-5.el8.x86_64.rpm"],
 )
 
@@ -4794,19 +4824,19 @@ rpm(
 
 rpm(
     name = "qemu-kvm-hw-usbredir-15__6.2.0-5.el8.x86_64",
-    sha256 = "496c06c7af179a7a87f80a895d3f669f51ca4fa7edf2e0b8c1492d43457684c3",
+    sha256 = "ccf1b61f9ed1e3e8d72c1aaf1cb12d6cac2b3a5739dabe2376cabcc9f50b0c13",
     urls = ["http://localhost:3031/qemu-kvm-hw-usbredir-6.2.0-5.el8.x86_64.rpm"],
 )
 
 rpm(
     name = "qemu-kvm-ui-opengl-15__6.2.0-5.el8.x86_64",
-    sha256 = "658a6b21a22383f865ad8c637ad677ef8318cae731a6becda6b5e8b9750b1670",
+    sha256 = "2137c3d17bbcb8e39e9f33b220afbae862dc4c3e312795faf79392549f75d005",
     urls = ["http://localhost:3031/qemu-kvm-ui-opengl-6.2.0-5.el8.x86_64.rpm"],
 )
 
 rpm(
     name = "qemu-kvm-ui-spice-15__6.2.0-5.el8.x86_64",
-    sha256 = "9a77f42f62893269938a8652482312ff4e85961b9c818db389f8a451579d525e",
+    sha256 = "24ebf523f32aff192de36d7ce67f443d7ea2060cae72ca44ca251928a4a0f04f",
     urls = ["http://localhost:3031/qemu-kvm-ui-spice-6.2.0-5.el8.x86_64.rpm"],
 )
 
@@ -5012,6 +5042,12 @@ rpm(
 )
 
 rpm(
+    name = "sil-abyssinica-fonts-0__1.200-13.el8.x86_64",
+    sha256 = "34a928cd01a998db63cbf930bea8c9f246848e479498866b7c026c3cc3c55778",
+    urls = ["http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/sil-abyssinica-fonts-1.200-13.el8.noarch.rpm"],
+)
+
+rpm(
     name = "snappy-0__1.1.8-3.el8.aarch64",
     sha256 = "4731985b22fc7b733ff89be6c1423396f27c94a78bb09fc89be5c2200bee893c",
     urls = [
@@ -5186,18 +5222,6 @@ rpm(
 )
 
 rpm(
-    name = "thai-scalable-fonts-common-0__0.6.5-1.el8.x86_64",
-    sha256 = "591dc3a182d85005fd5fc5bea2ff45616d77f775b7f6384cbd90a1a6707c3f34",
-    urls = ["http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/thai-scalable-fonts-common-0.6.5-1.el8.noarch.rpm"],
-)
-
-rpm(
-    name = "thai-scalable-umpush-fonts-0__0.6.5-1.el8.x86_64",
-    sha256 = "881115ba5f0090b6aaf1ed22326fefe1110d40b17a374aaa4b5a41d7843ec0d7",
-    urls = ["http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/thai-scalable-umpush-fonts-0.6.5-1.el8.noarch.rpm"],
-)
-
-rpm(
     name = "tzdata-0__2022a-2.el8.aarch64",
     sha256 = "0440f6795ede1959a5381056845a232db6991633aae371373e703d9c16e592e2",
     urls = [
@@ -5280,7 +5304,7 @@ rpm(
 
 rpm(
     name = "vim-minimal-2__8.2.2637-12.el8.x86_64",
-    sha256 = "daed605e77a360d70f2bdfc8b20a8cfea3dbeffde7425009b52a5cbe5df321a8",
+    sha256 = "e893b5e2e8afb565cf6d26df42cfa370f6f59d67a852d3c1ffbc3ddd7d9e9928",
     urls = ["https://pkgs.dyn.su/el8/extras/x86_64/vim-minimal-8.2.2637-12.el8.x86_64.rpm"],
 )
 
@@ -5411,6 +5435,12 @@ rpm(
     name = "zlib-0__1.2.11-21.el8.x86_64",
     sha256 = "9aabeb4a75c05b98661200dc9f0f1c7c528af42b9535c7c133dd4c0c5f80d179",
     urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/zlib-1.2.11-21.el8.x86_64.rpm"],
+)
+
+rpm(
+    name = "zlib-devel-0__1.2.11-21.el8.x86_64",
+    sha256 = "3c21fe114f95063ca580525203bd196004e4c72c604679a06c28985782c440c5",
+    urls = ["http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/zlib-devel-1.2.11-21.el8.x86_64.rpm"],
 )
 
 rpm(

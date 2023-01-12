@@ -54,6 +54,7 @@ testimage_base="
   qemu-img-${QEMU_VERSION}
   qemu-kvm-ui-opengl-${QEMU_VERSION}
   qemu-kvm-ui-spice-${QEMU_VERSION}
+  gdk-pixbuf2-devel
   util-linux
   which
   tar
@@ -86,6 +87,7 @@ launcherbase_base="
   qemu-kvm-core-${QEMU_VERSION}
   qemu-kvm-ui-opengl-${QEMU_VERSION}
   qemu-kvm-ui-spice-${QEMU_VERSION}
+  gdk-pixbuf2-devel
 "
 launcherbase_x86_64="
   edk2-ovmf-${EDK2_VERSION}
@@ -93,6 +95,7 @@ launcherbase_x86_64="
   seabios-${SEABIOS_VERSION}
   qemu-kvm-ui-opengl-${QEMU_VERSION}
   qemu-kvm-ui-spice-${QEMU_VERSION}
+  gdk-pixbuf2-devel
 "
 launcherbase_aarch64="
   edk2-aarch64-${EDK2_VERSION}
@@ -114,6 +117,7 @@ handler_base="
   qemu-img-${QEMU_VERSION}
   qemu-kvm-ui-opengl-${QEMU_VERSION}
   qemu-kvm-ui-spice-${QEMU_VERSION}
+  gdk-pixbuf2-devel
 "
 
 handlerbase_extra="
@@ -136,6 +140,7 @@ libguestfstools_base="
   qemu-kvm-core-${QEMU_VERSION}
   qemu-kvm-ui-opengl-${QEMU_VERSION}
   qemu-kvm-ui-spice-${QEMU_VERSION}
+  gdk-pixbuf2-devel
   seabios-${SEABIOS_VERSION}
   tar
 "
