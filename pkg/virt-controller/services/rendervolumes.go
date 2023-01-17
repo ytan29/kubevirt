@@ -414,9 +414,8 @@ func withUSBMapAnnotation() VolumeRendererOption {
 // flagXY
 func withDisplayMapAnnotation() VolumeRendererOption {
 	return func(renderer *VolumeRenderer) error {
-		basePath := "/sys/devices/pci0000:00"
-		var hostPathType k8sv1.HostPathType
-		hostPathType = k8sv1.HostPathDirectory
+		basePath := "/dev/udmabuf"
+		hostPathType := k8sv1.HostPathCharDev
 
 		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
 			Name:      "display",

@@ -21,6 +21,7 @@ package display
 
 import (
 	"fmt"
+	"strings"
 
 	v1 "kubevirt.io/api/core/v1"
 	"kubevirt.io/client-go/log"
@@ -139,15 +140,17 @@ func createDisplayDevices(devicesData []DisplayDeviceMetaData, addrPool AddressP
 // flagXY
 func createDisplayDev(displayDev DisplayDeviceMetaData, displayDevAddr string, monitor string) (*api.Arg, *api.Env, error) {
 	// displayDevAddr = $DISPLAY.MONITOR eg : :1.0
-	// split := strings.Split(displayDevAddr, ".")
+	addr := strings.Split(displayDevAddr, ".")
 	// busdevNum = addrPool.Pop(hostDeviceData.ResourceName) = [hostDeviceData.ResourceName].value
 	log.Log.Infof("==========   generate displayArg address: %s", displayDevAddr)
 	var displayArg api.Arg
 
-	displayArg = api.Arg{Value: fmt.Sprintf("gtk,gl=on,full-screen=on,monitor.0=%s", monitor)}
+	// displayArg = api.Arg{Value: fmt.Sprintf("gtk,gl=on,full-screen=on,monitor.0=%s", monitor)}
+	displayArg = api.Arg{Value: fmt.Sprintf("gtk,gl=on,monitor.0=%s", monitor)}
+	// displayArg = api.Arg{Value: fmt.Sprintf("gtk")}
 
 	var displayEnv api.Env
-	displayEnv = api.Env{Name: "DISPLAY", Value: ":1"}
+	displayEnv = api.Env{Name: "DISPLAY", Value: addr[0]}
 
 	return &displayArg, &displayEnv, nil
 }

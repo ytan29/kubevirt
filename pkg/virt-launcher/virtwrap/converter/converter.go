@@ -1384,8 +1384,18 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 		}
 	}
 
-	if domain.Spec.Memory, err = vcpu.QuantityToByte(*vcpu.GetVirtualMemory(vmi)); err != nil {
-		return err
+	// if domain.Spec.Memory, err = vcpu.QuantityToByte(*vcpu.GetVirtualMemory(vmi)); err != nil {
+	// 	return err
+	// }
+	displaymem := vcpu.GetVirtualMemory(vmi)
+	asIntnum, _ := displaymem.AsInt64()
+	// log.Log.Infof("==============memory value: %v", displaymem.Value())
+	// log.Log.Infof("==============memory format: %v", displaymem.Format)
+	log.Log.Infof("==============memory unsigned integer: %v", uint64(asIntnum))
+	// log.Log.Infof("==============memory size: %v", displaymem.Size())
+	domain.Spec.Memory = api.Memory{
+		Value: uint64(asIntnum),
+		Unit:  "b",
 	}
 
 	var isMemfdRequired = false
@@ -1839,7 +1849,10 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 	// flagXY
 	if len(c.DisplayDevices.QEMUArg) > 0 {
 		initializeQEMUCmdAndQEMUArg(domain)
-		memory := fmt.Sprintf("%d%s", domain.Spec.Memory.Value, domain.Spec.Memory.Unit)
+		// memory := fmt.Sprintf("%d%s", domain.Spec.Memory.Value, domain.Spec.Memory.Unit)
+
+		domain.Spec.QEMUCmd.QEMUEnv = append(domain.Spec.QEMUCmd.QEMUEnv, c.DisplayDevices.QEMUEnv...)
+		domain.Spec.QEMUCmd.QEMUArg = append(domain.Spec.QEMUCmd.QEMUArg, c.DisplayDevices.QEMUArg...)
 
 		domain.Spec.QEMUCmd.QEMUArg = append(domain.Spec.QEMUCmd.QEMUArg,
 			api.Arg{Value: "-device"},
@@ -1847,11 +1860,9 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 			api.Arg{Value: "-machine"},
 			api.Arg{Value: "memory-backend=mem"},
 			api.Arg{Value: "-object"},
-			api.Arg{Value: "memory-backend-memfd,id=mem,size=" + memory},
+			api.Arg{Value: fmt.Sprintf("memory-backend-memfd,id=mem,size=%db", uint64(asIntnum))},
 			api.Arg{Value: "-cpu"},
 			api.Arg{Value: "host"})
-		domain.Spec.QEMUCmd.QEMUArg = append(domain.Spec.QEMUCmd.QEMUArg, c.DisplayDevices.QEMUArg...)
-		domain.Spec.QEMUCmd.QEMUEnv = append(domain.Spec.QEMUCmd.QEMUEnv, c.DisplayDevices.QEMUEnv...)
 
 	}
 

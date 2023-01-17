@@ -190,6 +190,7 @@ func (dpi *DisplayDevicePlugin) Allocate(_ context.Context, r *pluginapi.Allocat
 	resourceNameEnvVar := util.ResourceNameToEnvVar(v1.DisplayResourcePrefix, dpi.resourceName)
 	log.DefaultLogger().Infof("Allocate: resourceNameEnvVar: %s", resourceNameEnvVar)
 	allocatedDevices := []string{}
+	var displayID string
 	resp := new(pluginapi.AllocateResponse)
 	containerResponse := new(pluginapi.ContainerAllocateResponse)
 
@@ -200,6 +201,7 @@ func (dpi *DisplayDevicePlugin) Allocate(_ context.Context, r *pluginapi.Allocat
 			log.DefaultLogger().Infof("Allocate: devID: %s", devID)
 			addarr := strings.Split(devID, ".")
 			allocatedDevices = append(allocatedDevices, addarr[0])
+			displayID = addarr[0]
 
 			formatted := formatDisplayDeviceSpecs(devID)
 			log.DefaultLogger().Infof("Allocate: formatted display: %v", formatted)
@@ -208,7 +210,9 @@ func (dpi *DisplayDevicePlugin) Allocate(_ context.Context, r *pluginapi.Allocat
 		}
 		containerResponse.Devices = deviceSpecs
 		envVar := make(map[string]string)
-		envVar["DISPLAY"] = strings.Join(allocatedDevices, ",")
+		envVar["DISPLAY"] = displayID
+		envVar["NO_AT_BRIDGE"] = "1"
+		envVar[resourceNameEnvVar] = strings.Join(allocatedDevices, ",")
 		log.Log.Infof("===================env var :%v", envVar)
 
 		containerResponse.Envs = envVar
