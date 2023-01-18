@@ -1389,10 +1389,6 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 	// }
 	displaymem := vcpu.GetVirtualMemory(vmi)
 	asIntnum, _ := displaymem.AsInt64()
-	// log.Log.Infof("==============memory value: %v", displaymem.Value())
-	// log.Log.Infof("==============memory format: %v", displaymem.Format)
-	log.Log.Infof("==============memory unsigned integer: %v", uint64(asIntnum))
-	// log.Log.Infof("==============memory size: %v", displaymem.Size())
 	domain.Spec.Memory = api.Memory{
 		Value: uint64(asIntnum),
 		Unit:  "b",
@@ -1850,7 +1846,8 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 	if len(c.DisplayDevices.QEMUArg) > 0 {
 		initializeQEMUCmdAndQEMUArg(domain)
 		// memory := fmt.Sprintf("%d%s", domain.Spec.Memory.Value, domain.Spec.Memory.Unit)
-
+		domain.Spec.Devices.Graphics = nil
+		domain.Spec.Devices.Video = nil
 		domain.Spec.QEMUCmd.QEMUEnv = append(domain.Spec.QEMUCmd.QEMUEnv, c.DisplayDevices.QEMUEnv...)
 		domain.Spec.QEMUCmd.QEMUArg = append(domain.Spec.QEMUCmd.QEMUArg, c.DisplayDevices.QEMUArg...)
 
@@ -1903,7 +1900,6 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 			},
 		}
 	}
-
 	return nil
 }
 
