@@ -282,16 +282,15 @@ func formatUSBDeviceSpecs(devID string) []*v1beta1.DeviceSpec {
 // flagXY
 func formatDisplayDeviceSpecs(devID string) []*v1beta1.DeviceSpec {
 	devSpecs := make([]*v1beta1.DeviceSpec, 0)
-	displayPath := "/dev/udmabuf"
 	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
-		HostPath:      displayPath,
-		ContainerPath: displayPath,
+		HostPath:      displayMemPath,
+		ContainerPath: displayMemPath,
 		Permissions:   "mrw",
 	})
 
 	devSpecs = append(devSpecs, &v1beta1.DeviceSpec{
-		HostPath:      displayPath,
-		ContainerPath: displayPath,
+		HostPath:      displayMemPath,
+		ContainerPath: displayMemPath,
 		Permissions:   "mrw",
 	})
 	return devSpecs

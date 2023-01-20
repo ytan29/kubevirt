@@ -25,7 +25,6 @@ import (
 	"net"
 	"os"
 	"path"
-	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -44,7 +43,7 @@ import (
 // flagXY
 
 const (
-	displayDevicePath = "/sys/devices/pci0000:00/"
+	displayMemPath = "/dev/udmabuf"
 )
 
 type DisplayDevice struct {
@@ -71,7 +70,6 @@ type DisplayDevicePlugin struct {
 
 func NewDisplayDevicePlugin(devices []*DisplayDevice, resourceName string) *DisplayDevicePlugin {
 	serverSock := SocketPath(strings.Replace(resourceName, "/", "-", -1))
-	log.DefaultLogger().Infof("=========== NewDisplayDevicePlugin socketPath %s", serverSock)
 
 	initHandler()
 
@@ -80,7 +78,6 @@ func NewDisplayDevicePlugin(devices []*DisplayDevice, resourceName string) *Disp
 		devs:         devs,
 		socketPath:   serverSock,
 		resourceName: resourceName,
-		devicePath:   displayDevicePath,
 		deviceRoot:   util.HostRootMount,
 		health:       make(chan deviceHealth),
 		initialized:  false,
@@ -92,7 +89,7 @@ func NewDisplayDevicePlugin(devices []*DisplayDevice, resourceName string) *Disp
 func constructDPIdevicesFromDisplay(devices []*DisplayDevice) (devs []*pluginapi.Device) {
 	for _, device := range devices {
 		dpiDev := &pluginapi.Device{
-			ID:     device.DisplayID + "." + device.BusNum + "." + device.DisplayNum,
+			ID:     device.DisplayID + "." + device.DisplayNum,
 			Health: pluginapi.Healthy,
 		}
 		devs = append(devs, dpiDev)
@@ -222,10 +219,8 @@ func (dpi *DisplayDevicePlugin) Allocate(_ context.Context, r *pluginapi.Allocat
 }
 
 func (dpi *DisplayDevicePlugin) healthCheck() error {
-	log.Log.Info("===================healthcheck for display===================")
-
 	logger := log.DefaultLogger()
-	monitoredDevices := make(map[string]string)
+	// monitoredDevices := make(map[string]string)
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		return fmt.Errorf("failed to creating a fsnotify watcher: %v", err)
@@ -234,43 +229,43 @@ func (dpi *DisplayDevicePlugin) healthCheck() error {
 
 	// This way we don't have to mount /dev from the node
 	// devicePath := filepath.Join(dpi.deviceRoot, dpi.devicePath)
-	devicePath := filepath.Join(dpi.deviceRoot, dpi.devicePath)
-	//devicePath := dpi.devicePath
+	// devicePath := filepath.Join(dpi.deviceRoot, dpi.devicePath)
+	// //devicePath := dpi.devicePath
 
-	// Start watching the files before we check for their existence to avoid races
-	dirName := filepath.Dir(devicePath)
-	err = watcher.Add(dirName)
-	if err != nil {
-		return fmt.Errorf("failed to add the device root path to the watcher: %v", err)
-	}
+	// // Start watching the files before we check for their existence to avoid races
+	// dirName := filepath.Dir(devicePath)
+	// err = watcher.Add(dirName)
+	// if err != nil {
+	// 	return fmt.Errorf("failed to add the device root path to the watcher: %v", err)
+	// }
 
-	_, err = os.Stat(devicePath)
-	if err != nil {
-		if !errors.Is(err, os.ErrNotExist) {
-			return fmt.Errorf("could not stat the device: %v", err)
-		}
-		logger.Warningf("device '%s' is not present, the device plugin can't expose it.", dpi.devicePath)
-		dpi.health <- deviceHealth{Health: pluginapi.Unhealthy}
-	}
+	// _, err = os.Stat(devicePath)
+	// if err != nil {
+	// 	if !errors.Is(err, os.ErrNotExist) {
+	// 		return fmt.Errorf("could not stat the device: %v", err)
+	// 	}
+	// 	logger.Warningf("device '%s' is not present, the device plugin can't expose it.", dpi.devicePath)
+	// 	dpi.health <- deviceHealth{Health: pluginapi.Unhealthy}
+	// }
 
-	// probe all devices
-	for _, dev := range dpi.devs {
-		addarr := strings.Split(dev.ID, ".")
-		device := path.Join(devicePath, "0000:00:"+addarr[1]+"."+addarr[2])
-		err = watcher.Add(device)
-		logger.Infof("watching %s", device)
-		if err != nil {
-			return fmt.Errorf("failed to add the device %s to the watcher: %v", device, err)
-		}
-		monitoredDevices[device] = dev.ID
-	}
+	// // probe all devices
+	// for _, dev := range dpi.devs {
+	// 	addarr := strings.Split(dev.ID, ".")
+	// 	device := path.Join(devicePath, "0000:00:"+addarr[1]+"."+addarr[2])
+	// 	err = watcher.Add(device)
+	// 	logger.Infof("watching %s", device)
+	// 	if err != nil {
+	// 		return fmt.Errorf("failed to add the device %s to the watcher: %v", device, err)
+	// 	}
+	// 	monitoredDevices[device] = dev.ID
+	// }
 
-	dirName = filepath.Dir(dpi.socketPath)
-	err = watcher.Add(dirName)
+	// dirName = filepath.Dir(dpi.socketPath)
+	// err = watcher.Add(dirName)
 
-	if err != nil {
-		return fmt.Errorf("failed to add the device-plugin kubelet path to the watcher: %v", err)
-	}
+	// if err != nil {
+	// 	return fmt.Errorf("failed to add the device-plugin kubelet path to the watcher: %v", err)
+	// }
 	_, err = os.Stat(dpi.socketPath)
 	if err != nil {
 		return fmt.Errorf("failed to stat the device-plugin socket: %v", err)
@@ -283,7 +278,7 @@ func (dpi *DisplayDevicePlugin) healthCheck() error {
 		case err := <-watcher.Errors:
 			logger.Reason(err).Errorf("error watching devices and device plugin directory")
 		case event := <-watcher.Events:
-			if event.Name == devicePath {
+			if event.Name == dpi.resourceName {
 				//Health in this case is if the device path actually exists
 				if event.Op == fsnotify.Create {
 					logger.Infof("monitored device %s appeared", dpi.resourceName)
@@ -383,11 +378,9 @@ func discoverPermittedHostDisplayDevices(supportedDeviceMap map[string]string) m
 
 		dev := &DisplayDevice{
 			DisplayID:  addarr[0],
-			BusNum:     addarr[1],
-			DisplayNum: addarr[2],
+			DisplayNum: addarr[1],
 		}
 
-		dev.FullDevPath = filepath.Join(displayDevicePath, "0000:00:"+addarr[1]+"."+addarr[2])
 		devicesMap[resourceName] = append(devicesMap[resourceName], dev)
 	}
 	return devicesMap

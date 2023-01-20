@@ -778,7 +778,7 @@ func (t *templateService) newVolumeRenderer(vmi *v1.VirtualMachineInstance, name
 	// arif hack to always mount Host's x11
 	volumeOpts = append(volumeOpts, withX11Host())
 
-	volumeOpts = append(volumeOpts, withUSBMapAnnotation())
+	volumeOpts = append(volumeOpts, withUSBMapAnnotation(vmi.Spec.Domain.Devices.USBs))
 
 	// flagXY
 	if util.IsDisplayEnabled(vmi) {
