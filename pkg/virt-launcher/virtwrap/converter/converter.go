@@ -1853,7 +1853,7 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 
 		domain.Spec.QEMUCmd.QEMUArg = append(domain.Spec.QEMUCmd.QEMUArg,
 			api.Arg{Value: "-device"},
-			api.Arg{Value: "virtio-vga,max_outputs=1,blob=on,edid=on,xres=800,yres=600"},
+			api.Arg{Value: "virtio-vga,max_outputs=1,blob=on"},
 			api.Arg{Value: "-machine"},
 			api.Arg{Value: "memory-backend=mem"},
 			api.Arg{Value: "-object"},
