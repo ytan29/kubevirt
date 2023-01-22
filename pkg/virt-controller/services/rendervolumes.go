@@ -313,12 +313,37 @@ func withSidecarVolumes(hookSidecars hooks.HookSidecarList) VolumeRendererOption
 	}
 }
 
+func withOVMFHost() VolumeRendererOption {
+	return func(renderer *VolumeRenderer) error {
+		basePath := "/home/alderisland/sandbox/OVMF.fd"
+
+		var hostPathType k8sv1.HostPathType = k8sv1.HostPathDirectory
+
+		// volume renderer for OVMF hostpath
+		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
+			Name:      "ovmf",
+			MountPath: basePath,
+		})
+
+		renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{
+			Name: "ovmf",
+			VolumeSource: k8sv1.VolumeSource{
+				HostPath: &k8sv1.HostPathVolumeSource{
+					Path: basePath,
+					Type: &hostPathType,
+				},
+			},
+		})
+
+		return nil
+	}
+}
+
 func withX11Host() VolumeRendererOption {
 	return func(renderer *VolumeRenderer) error {
 		basePathX11unix := "/tmp/.X11-unix"
 
-		var hostPathType k8sv1.HostPathType
-		hostPathType = k8sv1.HostPathDirectory
+		var hostPathType k8sv1.HostPathType = k8sv1.HostPathDirectory
 
 		// volume renderer for X11unix hostpath
 		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
@@ -350,7 +375,7 @@ func withX11Host() VolumeRendererOption {
 						Name: "xauthority",
 					},
 					Items: []k8sv1.KeyToPath{
-						k8sv1.KeyToPath{
+						{
 							Key:  ".Xauthority",
 							Path: ".Xauthority",
 						},
