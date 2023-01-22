@@ -146,7 +146,7 @@ func createDisplayDev(displayDev DisplayDeviceMetaData, displayDevAddr string, m
 	var displayArg api.Arg
 
 	// displayArg = api.Arg{Value: fmt.Sprintf("gtk,gl=on,full-screen=on,monitor.0=%s", monitor)}
-	displayArg = api.Arg{Value: fmt.Sprintf("gtk,gl=on,monitor.0=%s", monitor)}
+	displayArg = api.Arg{Value: fmt.Sprintf("gtk,gl=off,monitor.0=%s", monitor)}
 	// displayArg = api.Arg{Value: fmt.Sprintf("gtk")}
 
 	var displayEnv api.Env
