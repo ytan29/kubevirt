@@ -313,32 +313,6 @@ func withSidecarVolumes(hookSidecars hooks.HookSidecarList) VolumeRendererOption
 	}
 }
 
-func withOVMFHost() VolumeRendererOption {
-	return func(renderer *VolumeRenderer) error {
-
-		var hostPathType k8sv1.HostPathType = k8sv1.HostPathDirectory
-
-		// volume renderer for OVMF hostpath
-		renderer.podVolumeMounts = append(renderer.podVolumeMounts, k8sv1.VolumeMount{
-			Name:      "ovmf",
-			MountPath: "/usr/share/OVMF/OVMF_CODE.secboot.fd",
-			SubPath:   "OVMF.fd",
-		})
-
-		renderer.podVolumes = append(renderer.podVolumes, k8sv1.Volume{
-			Name: "ovmf",
-			VolumeSource: k8sv1.VolumeSource{
-				HostPath: &k8sv1.HostPathVolumeSource{
-					Path: "/home/alderisland/sandbox/OVMF",
-					Type: &hostPathType,
-				},
-			},
-		})
-
-		return nil
-	}
-}
-
 func withX11Host() VolumeRendererOption {
 	return func(renderer *VolumeRenderer) error {
 		basePathX11unix := "/tmp/.X11-unix"

@@ -780,7 +780,6 @@ func (t *templateService) newVolumeRenderer(vmi *v1.VirtualMachineInstance, name
 	// flagXY
 	if util.IsDisplayEnabled(vmi) {
 		volumeOpts = append(volumeOpts, withX11Host())
-		volumeOpts = append(volumeOpts, withOVMFHost())
 		volumeOpts = append(volumeOpts, withDisplayMapAnnotation())
 	}
 
