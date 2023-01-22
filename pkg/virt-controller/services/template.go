@@ -89,8 +89,8 @@ const (
 // Libvirt needs roughly 10 seconds to start.
 const LibvirtStartupDelay = 10
 
-// These perfixes for node feature discovery, are used in a NodeSelector on the pod
-// to match a VirtualMachineInstance CPU model(Family) and/or features to nodes that support them.
+//These perfixes for node feature discovery, are used in a NodeSelector on the pod
+//to match a VirtualMachineInstance CPU model(Family) and/or features to nodes that support them.
 const NFD_CPU_MODEL_PREFIX = "cpu-model.node.kubevirt.io/"
 const NFD_CPU_FEATURE_PREFIX = "cpu-feature.node.kubevirt.io/"
 const NFD_KVM_INFO_PREFIX = "hyperv.node.kubevirt.io/"
@@ -775,12 +775,13 @@ func (t *templateService) newVolumeRenderer(vmi *v1.VirtualMachineInstance, name
 		volumeOpts = append(volumeOpts, withSRIOVPciMapAnnotation())
 	}
 
+	// arif hack to always mount Host's x11
+	volumeOpts = append(volumeOpts, withX11Host())
+
 	volumeOpts = append(volumeOpts, withUSBMapAnnotation(vmi.Spec.Domain.Devices.USBs))
 
 	// flagXY
 	if util.IsDisplayEnabled(vmi) {
-		volumeOpts = append(volumeOpts, withX11Host())
-		volumeOpts = append(volumeOpts, withOVMFConfigMap())
 		volumeOpts = append(volumeOpts, withDisplayMapAnnotation())
 	}
 
